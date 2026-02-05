@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entreprendre Ensemble pour Châteauneuf | Liste Municipale</title>
+  <meta name="description" content="Entreprendre Ensemble pour Châteauneuf - Liste municipale. Souriants, sympas, à l'écoute, enthousiastes. Proximité, pédagogie et incarnation locale.">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Framer Motion -->
+  <script src="https://unpkg.com/framer-motion@11.0.8/dist/framer-motion.js"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Favicon -->
+  <link rel="icon" href="images/logo-chateauneuf.png">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#E6F7FC',
+              100: '#CCF0FA',
+              200: '#99E0F5',
+              300: '#66D1F0',
+              400: '#33C1EB',
+              500: '#0098D8',
+              600: '#007AAD',
+              700: '#005B82',
+              800: '#003D56',
+              900: '#001E2B',
+            },
+            secondary: {
+              50: '#FEF3F0',
+              100: '#FDE7E1',
+              200: '#FBCFC3',
+              300: '#F9B7A5',
+              400: '#F79F87',
+              500: '#D35E2D',
+              600: '#A94B24',
+              700: '#7F381B',
+              800: '#542512',
+              900: '#2A1309',
+            },
+            accent: {
+              50: '#F4F7ED',
+              100: '#E9EFDB',
+              200: '#D3DFB7',
+              300: '#BDCF93',
+              400: '#A7BF6F',
+              500: '#6B8E23',
+              600: '#56721C',
+              700: '#405515',
+              800: '#2B390E',
+              900: '#151C07',
+            },
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Playfair Display', 'serif'],
+          },
+          animation: {
+            'float': 'float 6s ease-in-out infinite',
+            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'gradient': 'gradient 8s ease infinite',
+            'slide-up': 'slideUp 0.5s ease-out',
+            'fade-in': 'fadeIn 0.6s ease-out',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-20px)' },
+            },
+            gradient: {
+              '0%, 100%': { backgroundPosition: '0% 50%' },
+              '50%': { backgroundPosition: '100% 50%' },
+            },
+            slideUp: {
+              '0%': { transform: 'translateY(30px)', opacity: '0' },
+              '100%': { transform: 'translateY(0)', opacity: '1' },
+            },
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' },
+            },
+          },
+        },
+      },
+    }
+  </script>
+
+  <style>
+    .gradient-text {
+      background: linear-gradient(135deg, #0098D8 0%, #D35E2D 50%, #6B8E23 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradient 8s ease infinite;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .hero-gradient {
+      background: linear-gradient(135deg, #E6F7FC 0%, #FEF3F0 50%, #F4F7ED 100%);
+    }
+
+    .card-hover {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card-hover:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 25px 50px -12px rgba(0, 152, 216, 0.25);
+    }
+
+    .team-card:hover .team-image {
+      transform: scale(1.1);
+    }
+
+    .team-card:hover .team-overlay {
+      opacity: 1;
+    }
+
+    .number-badge {
+      background: linear-gradient(135deg, #D35E2D 0%, #A94B24 100%);
+    }
+
+    .engagement-icon {
+      background: linear-gradient(135deg, #0098D8 0%, #007AAD 100%);
+    }
+
+    /* Scroll animations */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #0098D8, #D35E2D);
+      border-radius: 5px;
+    }
+
+    /* Mobile menu */
+    .mobile-menu {
+      transform: translateX(100%);
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .mobile-menu.open {
+      transform: translateX(0);
+    }
+  </style>
+</head>
+
+<body class="font-sans antialiased text-gray-800 overflow-x-hidden">
+
+  <!-- Navigation -->
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <!-- Logo -->
+        <a href="#" class="flex items-center space-x-3">
+          <img src="images/logo.png" alt="Châteauneuf" class="h-24 w-auto">
+        </a>
+
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="#accueil" class="text-gray-700 hover:text-primary-500 font-medium transition-colors">Accueil</a>
+          <a href="#valeurs" class="text-gray-700 hover:text-primary-500 font-medium transition-colors">Nos valeurs</a>
+          <a href="#engagements" class="text-gray-700 hover:text-primary-500 font-medium transition-colors">Engagements</a>
+          <a href="#equipe" class="text-gray-700 hover:text-primary-500 font-medium transition-colors">L'équipe</a>
+          <a href="#contact" class="bg-gradient-to-r from-primary-500 to-primary-600 text-white px-6 py-2.5 rounded-full font-semibold hover:shadow-lg hover:shadow-primary-500/30 transition-all duration-300 hover:-translate-y-0.5">
+            Contact
+          </a>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors">
+          <i data-lucide="menu" class="w-6 h-6 text-gray-700"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu fixed inset-y-0 right-0 w-72 bg-white shadow-2xl z-50 p-6">
+      <div class="flex justify-end mb-8">
+        <button id="close-menu-btn" class="p-2 rounded-lg hover:bg-gray-100 transition-colors">
+          <i data-lucide="x" class="w-6 h-6 text-gray-700"></i>
+        </button>
+      </div>
+      <div class="flex flex-col space-y-6">
+        <a href="#accueil" class="text-gray-700 hover:text-primary-500 font-medium text-lg transition-colors">Accueil</a>
+        <a href="#valeurs" class="text-gray-700 hover:text-primary-500 font-medium text-lg transition-colors">Nos valeurs</a>
+        <a href="#engagements" class="text-gray-700 hover:text-primary-500 font-medium text-lg transition-colors">Engagements</a>
+        <a href="#equipe" class="text-gray-700 hover:text-primary-500 font-medium text-lg transition-colors">L'équipe</a>
+        <a href="#contact" class="bg-gradient-to-r from-primary-500 to-primary-600 text-white px-6 py-3 rounded-full font-semibold text-center mt-4">
+          Contact
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="accueil" class="hero-gradient min-h-screen flex items-center pt-20 relative overflow-hidden">
+    <!-- Decorative elements -->
+    <div class="absolute top-20 left-10 w-72 h-72 bg-primary-200 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-float"></div>
+    <div class="absolute bottom-20 right-10 w-72 h-72 bg-secondary-200 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-float" style="animation-delay: 2s;"></div>
+    <div class="absolute top-1/2 left-1/2 w-96 h-96 bg-accent-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float" style="animation-delay: 4s;"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <!-- Left Content -->
+        <div class="reveal">
+          <div class="inline-flex items-center px-4 py-2 bg-white/80 backdrop-blur rounded-full shadow-sm mb-6">
+            <span class="w-2 h-2 bg-accent-500 rounded-full mr-2 animate-pulse"></span>
+            <span class="text-sm font-medium text-gray-600">Élections Municipales 2026</span>
+          </div>
+
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+            <span class="gradient-text">Entreprendre Ensemble</span>
+            <br>
+            <span class="text-gray-800">pour Châteauneuf</span>
+          </h1>
+
+          <p class="text-xl text-gray-600 mb-8 leading-relaxed">
+            Une équipe <span class="font-semibold text-primary-600">souriante</span>,
+            <span class="font-semibold text-secondary-500">sympathique</span>,
+            <span class="font-semibold text-accent-600">à l'écoute</span> et
+            <span class="font-semibold text-primary-600">enthousiaste</span>
+            pour construire l'avenir de notre commune.
+          </p>
+
+          <!-- Values Tags 
+          <div class="flex flex-wrap gap-3 mb-10">
+            <span class="px-4 py-2 bg-primary-500 text-white rounded-full text-sm font-semibold shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 transition-all duration-300 cursor-default">
+              Proximité
+            </span>
+            <span class="px-4 py-2 bg-secondary-500 text-white rounded-full text-sm font-semibold shadow-lg shadow-secondary-500/30 hover:shadow-xl hover:shadow-secondary-500/40 transition-all duration-300 cursor-default">
+              Pédagogie
+            </span>
+            <span class="px-4 py-2 bg-accent-500 text-white rounded-full text-sm font-semibold shadow-lg shadow-accent-500/30 hover:shadow-xl hover:shadow-accent-500/40 transition-all duration-300 cursor-default">
+              Incarnation locale
+            </span>
+          </div>-->
+
+          <div class="flex flex-col sm:flex-row gap-4">
+            <a href="#engagements" class="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold rounded-xl shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 hover:-translate-y-1 transition-all duration-300">
+              Découvrir nos engagements
+              <i data-lucide="arrow-right" class="w-5 h-5 ml-2"></i>
+            </a>
+            <a href="#equipe" class="inline-flex items-center justify-center px-8 py-4 bg-white text-gray-700 font-semibold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-200">
+              Rencontrer l'équipe
+              <i data-lucide="users" class="w-5 h-5 ml-2"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right Content - Logo -->
+        <div class="reveal flex justify-center lg:justify-end" style="animation-delay: 0.2s;">
+          <div class="relative">
+            <div class="absolute inset-0 bg-gradient-to-r from-primary-400 to-accent-400 rounded-full blur-3xl opacity-20 scale-110"></div>
+            <img src="images/logo-chateauneuf.png" alt="Châteauneuf Vendée" class="relative w-80 lg:w-96 animate-float">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+      <a href="#valeurs" class="flex flex-col items-center text-gray-400 hover:text-primary-500 transition-colors">
+        <span class="text-sm mb-2">Découvrir</span>
+        <i data-lucide="chevron-down" class="w-6 h-6"></i>
+      </a>
+    </div>
+  </section>
+
+  <!-- Values Section -->
+  <section id="valeurs" class="py-24 bg-white relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16 reveal">
+        <span class="inline-block px-4 py-1 bg-primary-100 text-primary-600 rounded-full text-sm font-semibold mb-4">Notre vision</span>
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-800 mb-4">
+          Une équipe à <span class="gradient-text">votre service</span>
+        </h2>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+          Nous croyons en une commune vivante et dynamique où chaque habitant trouve sa place.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Value 1 -->
+        <div class="reveal glass-card rounded-2xl p-8 card-hover border border-gray-100" style="animation-delay: 0.1s;">
+          <div class="w-16 h-16 engagement-icon rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-primary-500/30">
+            <i data-lucide="users" class="w-8 h-8 text-white"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-3">Proximité</h3>
+          <p class="text-gray-600 leading-relaxed">
+            Nous sommes vos voisins, vos amis, vos commerçants. Nous vivons les mêmes réalités quotidiennes et partageons vos préoccupations.
+          </p>
+        </div>
+
+        <!-- Value 2 -->
+        <div class="reveal glass-card rounded-2xl p-8 card-hover border border-gray-100" style="animation-delay: 0.2s;">
+          <div class="w-16 h-16 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-secondary-500/30">
+            <i data-lucide="message-circle" class="w-8 h-8 text-white"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-3">Dialogue</h3>
+          <p class="text-gray-600 leading-relaxed">
+            L'écoute active et la concertation citoyenne sont au cœur de notre démarche. Chaque voix compte, chaque idée mérite d'être entendue.
+          </p>
+        </div>
+
+        <!-- Value 3 -->
+        <div class="reveal glass-card rounded-2xl p-8 card-hover border border-gray-100" style="animation-delay: 0.3s;">
+          <div class="w-16 h-16 bg-gradient-to-br from-accent-500 to-accent-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-accent-500/30">
+            <i data-lucide="heart" class="w-8 h-8 text-white"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-3">Engagement</h3>
+          <p class="text-gray-600 leading-relaxed">
+            Notre engagement est sincère et durable. Nous ne faisons pas de promesses impossibles, nous agissons concrètement pour vous.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Engagements Section -->
+  <section id="engagements" class="py-24 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
+    <div class="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-primary-50 to-transparent opacity-50"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="text-center mb-16 reveal">
+        <span class="inline-block px-4 py-1 bg-secondary-100 text-secondary-600 rounded-full text-sm font-semibold mb-4">Nos priorités</span>
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-800 mb-4">
+          5 engagements <span class="gradient-text">concrets</span>
+        </h2>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+          Des projets réalistes pour améliorer le quotidien des Castelneuviens
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+        <!-- Engagement 1 -->
+        <div class="reveal bg-white rounded-2xl p-8 shadow-lg card-hover relative overflow-hidden group" style="animation-delay: 0.1s;">
+          <div class="number-badge absolute -top-3 -left-3 w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg">1</div>
+          <div class="w-14 h-14 engagement-icon rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-primary-500/20 group-hover:scale-110 transition-transform duration-300">
+            <i data-lucide="school" class="w-7 h-7 text-white"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-3">École & développement</h3>
+          <p class="text-gray-600 mb-4">Une fermeture de classe cette année. <br>Une suppression de poste.<br> C'est un signal d'alarme.</p>
+          <div class="bg-primary-50 border-l-4 border-primary-500 p-4 rounded-r-lg mb-4">
+            <p class="text-primary-700 font-semibold text-sm">Une école vivante = une commune d'avenir</p>
+          </div>
+          <p class="text-gray-600 text-sm">
+            <strong>Notre action :</strong> Plan foncier concerté pour accueillir <span class="text-primary-600 font-bold">+50 familles en 6 ans</span>
+          </p>
+        </div>
+
+        <!-- Engagement 2 -->
+        <div class="reveal bg-white rounded-2xl p-8 shadow-lg card-hover relative overflow-hidden group" style="animation-delay: 0.15s;">
+          <div class="number-badge absolute -top-3 -left-3 w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg">2</div>
+          <div class="w-14 h-14 engagement-icon rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-primary-500/20 group-hover:scale-110 transition-transform duration-300">
+            <i data-lucide="hand-heart" class="w-7 h-7 text-white"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-3">Dynamique associative</h3>
+          <p class="text-gray-600 mb-4">Passer du soutien ponctuel à une vraie stratégie d'animation annuelle.</p>
+          <ul class="space-y-2 text-gray-600 text-sm">
+            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-accent-500 mr-2"></i>Budget participatif associatif</li>
+            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-accent-500 mr-2"></i>Aide renforcée pour l'été</li>
+            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-accent-500 mr-2"></i>Accompagnement des bénévoles</li>
+          </ul>
+        </div>
+
+        <!-- Engagement 3 -->
+        <div class="reveal bg-white rounded-2xl p-8 shadow-lg card-hover relative overflow-hidden group" style="animation-delay: 0.2s;">
+          <div class="number-badge absolute -top-3 -left-3 w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg">3</div>
+          <div class="w-14 h-14 engagement-icon rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-primary-500/20 group-hover:scale-110 transition-transform duration-300">
+            <i data-lucide="sprout" class="w-7 h-7 text-white"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-3">Engagement jeunesse</h3>
+          <p class="text-gray-600 mb-4">Nos jeunes, premiers acteurs de leur territoire.</p>
+          <ul class="space-y-2 text-gray-600 text-sm">
+            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-accent-500 mr-2"></i>Plantation d'arbres & pédagogie</li>
+            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-accent-500 mr-2"></i>Sensibilisation environnementale</li>
+            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-accent-500 mr-2"></i>Découverte agricole et entreprise locale</li>
+          </ul>
+        </div>
+
+        <!-- Engagement 4 -->
+        <div class="reveal bg-white rounded-2xl p-8 shadow-lg card-hover relative overflow-hidden group" style="animation-delay: 0.25s;">
+          <div class="number-badge absolute -top-3 -left-3 w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg">4</div>
+          <div class="w-14 h-14 engagement-icon rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-primary-500/20 group-hover:scale-110 transition-transform duration-300">
+            <i data-lucide="heart-pulse" class="w-7 h-7 text-white"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-3">Pôle santé</h3>
+          <p class="text-gray-600 mb-4">Consultation publique pour créer un vrai pôle santé communal.</p>
+          <div class="bg-accent-50 border-l-4 border-accent-500 p-4 rounded-r-lg">
+            <p class="text-accent-700 font-semibold text-sm">Soyons attractifs pour nos futurs médecins</p>
+          </div>
+        </div>
+
+        <!-- Engagement 5 -->
+        <div class="reveal bg-white rounded-2xl p-8 shadow-lg card-hover relative overflow-hidden group" style="animation-delay: 0.3s;">
+          <div class="number-badge absolute -top-3 -left-3 w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg">5</div>
+          <div class="w-14 h-14 engagement-icon rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-primary-500/20 group-hover:scale-110 transition-transform duration-300">
+            <i data-lucide="piggy-bank" class="w-7 h-7 text-white"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-3">Rigueur budgétaire</h3>
+          <p class="text-gray-600 mb-4">Votre argent mérite des projets utiles dans l'intérêt général.</p>
+          <div class="bg-secondary-50 border-l-4 border-secondary-500 p-4 rounded-r-lg">
+            <p class="text-secondary-700 font-semibold text-sm">Chaque euro investi améliore la vie à Châteauneuf</p>
+          </div>
+        </div>
+
+        <!-- CTA Card -->
+        <div class="reveal bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl p-8 shadow-xl card-hover flex flex-col justify-center items-center text-center" style="animation-delay: 0.35s;">
+          <i data-lucide="mail" class="w-12 h-12 text-white/80 mb-4"></i>
+          <h3 class="text-xl font-bold text-white mb-3">Rejoignez-nous !</h3>
+          <p class="text-white/80 mb-6">Partagez notre vision pour Châteauneuf ?</p>
+          <a href="#contact" class="inline-flex items-center px-6 py-3 bg-white text-primary-600 font-semibold rounded-xl hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+            Contactez-nous
+            <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Team Section -->
+  <section id="equipe" class="py-24 bg-white relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16 reveal">
+        <span class="inline-block px-4 py-1 bg-accent-100 text-accent-600 rounded-full text-sm font-semibold mb-4">Notre force</span>
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-800 mb-4">
+          Une équipe <span class="gradient-text">engagée</span>
+        </h2>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+          15 Castelneuviens motivés, issus de tous horizons, unis pour notre commune
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+
+        <!-- Team Member 1 -->
+        <div class="reveal team-card group" style="animation-delay: 0.05s;">
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+            <div class="relative h-48 bg-gradient-to-br from-primary-100 to-primary-200 overflow-hidden">
+              <div class="team-image absolute inset-0 bg-gray-300 transition-transform duration-500">
+                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-400 to-primary-500">
+                  <i data-lucide="user" class="w-16 h-16 text-white/50"></i>
+                </div>
+              </div>
+              <div class="team-overlay absolute inset-0 bg-gradient-to-t from-primary-600/90 to-transparent opacity-0 transition-opacity duration-300 flex items-end p-4">
+                <span class="text-white text-xs font-medium">Tête de liste</span>
+              </div>
+            </div>
+            <div class="p-4 text-center">
+              <h4 class="font-bold text-gray-800">Aurélien Arnaud</h4>
+              <p class="text-sm text-gray-500">36 ans</p>
+              <p class="text-xs text-primary-600 font-medium mt-1">Directeur conseil en agence de communication</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Team Member 2 -->
+        <div class="reveal team-card group" style="animation-delay: 0.1s;">
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+            <div class="relative h-48 bg-gradient-to-br from-secondary-100 to-secondary-200 overflow-hidden">
+              <div class="team-image absolute inset-0 transition-transform duration-500">
+                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-secondary-400 to-secondary-500">
+                  <i data-lucide="user" class="w-16 h-16 text-white/50"></i>
+                </div>
+              </div>
+            </div>
+            <div class="p-4 text-center">
+              <h4 class="font-bold text-gray-800">Fanellie  Guilbaud</h4>
+              <p class="text-sm text-gray-500">36 ans</p>
+              <p class="text-xs text-secondary-600 font-medium mt-1">Infirmière</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Team Member 3 -->
+        <div class="reveal team-card group" style="animation-delay: 0.15s;">
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+            <div class="relative h-48 bg-gradient-to-br from-accent-100 to-accent-200 overflow-hidden">
+              <div class="team-image absolute inset-0 transition-transform duration-500">
+                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-accent-400 to-accent-500">
+                  <i data-lucide="user" class="w-16 h-16 text-white/50"></i>
+                </div>
+              </div>
+            </div>
+            <div class="p-4 text-center">
+              <h4 class="font-bold text-gray-800">Prénom Nom</h4>
+              <p class="text-sm text-gray-500">38 ans</p>
+              <p class="text-xs text-accent-600 font-medium mt-1">Agriculteur</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Team Member 4 -->
+        <div class="reveal team-card group" style="animation-delay: 0.2s;">
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+            <div class="relative h-48 bg-gradient-to-br from-primary-100 to-primary-200 overflow-hidden">
+              <div class="team-image absolute inset-0 transition-transform duration-500">
+                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-400 to-primary-500">
+                  <i data-lucide="user" class="w-16 h-16 text-white/50"></i>
+                </div>
+              </div>
+            </div>
+            <div class="p-4 text-center">
+              <h4 class="font-bold text-gray-800">Prénom Nom</h4>
+              <p class="text-sm text-gray-500">61 ans</p>
+              <p class="text-xs text-primary-600 font-medium mt-1">Retraitée Éducation</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Team Member 5 -->
+        <div class="reveal team-card group" style="animation-delay: 0.25s;">
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+            <div class="relative h-48 bg-gradient-to-br from-secondary-100 to-secondary-200 overflow-hidden">
+              <div class="team-image absolute inset-0 transition-transform duration-500">
+                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-secondary-400 to-secondary-500">
+                  <i data-lucide="user" class="w-16 h-16 text-white/50"></i>
+                </div>
+              </div>
+            </div>
+            <div class="p-4 text-center">
+              <h4 class="font-bold text-gray-800">Prénom Nom</h4>
+              <p class="text-sm text-gray-500">29 ans</p>
+              <p class="text-xs text-secondary-600 font-medium mt-1">Développeur web</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Team Member 6 -->
+        <div class="reveal team-card group" style="animation-delay: 0.3s;">
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+            <div class="relative h-48 bg-gradient-to-br from-accent-100 to-accent-200 overflow-hidden">
+              <div class="team-image absolute inset-0 transition-transform duration-500">
+                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-accent-400 to-accent-500">
+                  <i data-lucide="user" class="w-16 h-16 text-white/50"></i>
+                </div>
+              </div>
+            </div>
+            <div class="p-4 text-center">
+              <h4 class="font-bold text-gray-800">Prénom Nom</h4>
+              <p class="text-sm text-gray-500">44 ans</p>
+              <p class="text-xs text-accent-600 font-medium mt-1">Artisan boulanger</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Team Member 7 -->
+        <div class="reveal team-card group" style="animation-delay: 0.35s;">
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+            <div class="relative h-48 bg-gradient-to-br from-primary-100 to-primary-200 overflow-hidden">
+              <div class="team-image absolute inset-0 transition-transform duration-500">
+                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-400 to-primary-500">
+                  <i data-lucide="user" class="w-16 h-16 text-white/50"></i>
+                </div>
+              </div>
+            </div>
+            <div class="p-4 text-center">
+              <h4 class="font-bold text-gray-800">Prénom Nom</h4>
+              <p class="text-sm text-gray-500">56 ans</p>
+              <p class="text-xs text-primary-600 font-medium mt-1">Comptable</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Team Member 8 -->
+        <div class="reveal team-card group" style="animation-delay: 0.4s;">
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+            <div class="relative h-48 bg-gradient-to-br from-secondary-100 to-secondary-200 overflow-hidden">
+              <div class="team-image absolute inset-0 transition-transform duration-500">
+                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-secondary-400 to-secondary-500">
+                  <i data-lucide="user" class="w-16 h-16 text-white/50"></i>
+                </div>
+              </div>
+            </div>
+            <div class="p-4 text-center">
+              <h4 class="font-bold text-gray-800">Prénom Nom</h4>
+              <p class="text-sm text-gray-500">33 ans</p>
+              <p class="text-xs text-secondary-600 font-medium mt-1">Enseignante</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Team Member 9 -->
+        <div class="reveal team-card group" style="animation-delay: 0.45s;">
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+            <div class="relative h-48 bg-gradient-to-br from-accent-100 to-accent-200 overflow-hidden">
+              <div class="team-image absolute inset-0 transition-transform duration-500">
+                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-accent-400 to-accent-500">
+                  <i data-lucide="user" class="w-16 h-16 text-white/50"></i>
+                </div>
+              </div>
+            </div>
+            <div class="p-4 text-center">
+              <h4 class="font-bold text-gray-800">Prénom Nom</h4>
+              <p class="text-sm text-gray-500">67 ans</p>
+              <p class="text-xs text-accent-600 font-medium mt-1">Retraité Industrie</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Team Member 10 -->
+        <div class="reveal team-card group" style="animation-delay: 0.5s;">
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+            <div class="relative h-48 bg-gradient-to-br from-primary-100 to-primary-200 overflow-hidden">
+              <div class="team-image absolute inset-0 transition-transform duration-500">
+                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-400 to-primary-500">
+                  <i data-lucide="user" class="w-16 h-16 text-white/50"></i>
+                </div>
+              </div>
+            </div>
+            <div class="p-4 text-center">
+              <h4 class="font-bold text-gray-800">Prénom Nom</h4>
+              <p class="text-sm text-gray-500">41 ans</p>
+              <p class="text-xs text-primary-600 font-medium mt-1">Aide-soignante</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Team Member 11 -->
+        <div class="reveal team-card group" style="animation-delay: 0.55s;">
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+            <div class="relative h-48 bg-gradient-to-br from-secondary-100 to-secondary-200 overflow-hidden">
+              <div class="team-image absolute inset-0 transition-transform duration-500">
+                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-secondary-400 to-secondary-500">
+                  <i data-lucide="user" class="w-16 h-16 text-white/50"></i>
+                </div>
+              </div>
+            </div>
+            <div class="p-4 text-center">
+              <h4 class="font-bold text-gray-800">Prénom Nom</h4>
+              <p class="text-sm text-gray-500">48 ans</p>
+              <p class="text-xs text-secondary-600 font-medium mt-1">Commerçant</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Team Member 12 -->
+        <div class="reveal team-card group" style="animation-delay: 0.6s;">
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+            <div class="relative h-48 bg-gradient-to-br from-accent-100 to-accent-200 overflow-hidden">
+              <div class="team-image absolute inset-0 transition-transform duration-500">
+                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-accent-400 to-accent-500">
+                  <i data-lucide="user" class="w-16 h-16 text-white/50"></i>
+                </div>
+              </div>
+            </div>
+            <div class="p-4 text-center">
+              <h4 class="font-bold text-gray-800">Prénom Nom</h4>
+              <p class="text-sm text-gray-500">35 ans</p>
+              <p class="text-xs text-accent-600 font-medium mt-1">Kinésithérapeute</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Team Member 13 -->
+        <div class="reveal team-card group" style="animation-delay: 0.65s;">
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+            <div class="relative h-48 bg-gradient-to-br from-primary-100 to-primary-200 overflow-hidden">
+              <div class="team-image absolute inset-0 transition-transform duration-500">
+                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-400 to-primary-500">
+                  <i data-lucide="user" class="w-16 h-16 text-white/50"></i>
+                </div>
+              </div>
+            </div>
+            <div class="p-4 text-center">
+              <h4 class="font-bold text-gray-800">Prénom Nom</h4>
+              <p class="text-sm text-gray-500">54 ans</p>
+              <p class="text-xs text-primary-600 font-medium mt-1">Électricien</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Team Member 14 -->
+        <div class="reveal team-card group" style="animation-delay: 0.7s;">
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+            <div class="relative h-48 bg-gradient-to-br from-secondary-100 to-secondary-200 overflow-hidden">
+              <div class="team-image absolute inset-0 transition-transform duration-500">
+                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-secondary-400 to-secondary-500">
+                  <i data-lucide="user" class="w-16 h-16 text-white/50"></i>
+                </div>
+              </div>
+            </div>
+            <div class="p-4 text-center">
+              <h4 class="font-bold text-gray-800">Prénom Nom</h4>
+              <p class="text-sm text-gray-500">27 ans</p>
+              <p class="text-xs text-secondary-600 font-medium mt-1">Assistante RH</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Team Member 15 -->
+        <div class="reveal team-card group" style="animation-delay: 0.75s;">
+          <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+            <div class="relative h-48 bg-gradient-to-br from-accent-100 to-accent-200 overflow-hidden">
+              <div class="team-image absolute inset-0 transition-transform duration-500">
+                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-accent-400 to-accent-500">
+                  <i data-lucide="user" class="w-16 h-16 text-white/50"></i>
+                </div>
+              </div>
+            </div>
+            <div class="p-4 text-center">
+              <h4 class="font-bold text-gray-800">Prénom Nom</h4>
+              <p class="text-sm text-gray-500">59 ans</p>
+              <p class="text-xs text-accent-600 font-medium mt-1">Viticulteur</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="py-24 bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 relative overflow-hidden">
+    <!-- Decorative elements -->
+    <div class="absolute top-0 left-0 w-96 h-96 bg-white/10 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+    <div class="absolute bottom-0 right-0 w-80 h-80 bg-white/10 rounded-full translate-x-1/3 translate-y-1/3"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="reveal">
+          <span class="inline-block px-4 py-1 bg-white/20 text-white rounded-full text-sm font-semibold mb-6">Restons connectés</span>
+          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+            Ensemble, construisons l'avenir
+          </h2>
+          <p class="text-xl text-white/80 mb-8 leading-relaxed">
+            Vous avez des idées, des questions ?
+            N'hésitez pas à nous contacter.
+          </p>
+
+          <div class="space-y-4 mb-8">
+            <div class="flex items-center text-white/90">
+              <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mr-4">
+                <i data-lucide="map-pin" class="w-5 h-5"></i>
+              </div>
+              <span>Châteauneuf, Vendée</span>
+            </div>
+            <div class="flex items-center text-white/90">
+              <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mr-4">
+                <i data-lucide="mail" class="w-5 h-5"></i>
+              </div>
+              <span>contact@entreprendre-chateauneuf.fr</span>
+            </div>
+          </div>
+
+          <div class="flex space-x-4">
+            <a href="#" class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-white hover:bg-white hover:text-primary-600 transition-all duration-300">
+              <i data-lucide="facebook" class="w-5 h-5"></i>
+            </a>
+            <!-- <a href="#" class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-white hover:bg-white hover:text-primary-600 transition-all duration-300">
+              <i data-lucide="instagram" class="w-5 h-5"></i> -->
+            </a>
+          </div>
+        </div>
+
+        <div class="reveal flex justify-center lg:justify-end" style="animation-delay: 0.2s;">
+          <img src="images/logo.png" alt="Châteauneuf" class="w-64 lg:w-80 opacity-90 drop-shadow-2xl">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-3 gap-8 mb-8">
+        <div>
+          <img src="images/logo.png" alt="Châteauneuf" class="h-16 mb-4 brightness-0 invert opacity-80">
+          <p class="text-gray-400 text-sm">
+            Entreprendre Ensemble pour Châteauneuf - Une équipe engagée pour l'avenir de notre commune.
+          </p>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-4">Navigation</h4>
+          <ul class="space-y-2 text-gray-400 text-sm">
+            <li><a href="#accueil" class="hover:text-white transition-colors">Accueil</a></li>
+            <li><a href="#valeurs" class="hover:text-white transition-colors">Nos valeurs</a></li>
+            <li><a href="#engagements" class="hover:text-white transition-colors">Engagements</a></li>
+            <li><a href="#equipe" class="hover:text-white transition-colors">L'équipe</a></li>
+            <li><a href="#contact" class="hover:text-white transition-colors">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-4">Légal</h4>
+          <ul class="space-y-2 text-gray-400 text-sm">
+            <li><a href="#" class="hover:text-white transition-colors">Mentions légales</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Politique de confidentialité</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-gray-800 pt-8 text-center text-gray-500 text-sm">
+        <p>&copy; 2025 Entreprendre Ensemble pour Châteauneuf. Tous droits réservés.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Navbar scroll effect
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        navbar.classList.add('bg-white/95', 'backdrop-blur-lg', 'shadow-lg');
+      } else {
+        navbar.classList.remove('bg-white/95', 'backdrop-blur-lg', 'shadow-lg');
+      }
+    });
+
+    // Mobile menu
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const closeMenuBtn = document.getElementById('close-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.add('open');
+    });
+
+    closeMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+    });
+
+    // Close mobile menu on link click
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+      });
+    });
+
+    // Scroll reveal animation
+    const revealElements = document.querySelectorAll('.reveal');
+
+    const revealOnScroll = () => {
+      revealElements.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+        const windowHeight = window.innerHeight;
+
+        if (elementTop < windowHeight - 100) {
+          element.classList.add('active');
+        }
+      });
+    };
+
+    window.addEventListener('scroll', revealOnScroll);
+    window.addEventListener('load', revealOnScroll);
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
