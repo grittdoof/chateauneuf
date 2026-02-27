@@ -208,7 +208,7 @@
       transform: translateY(0) scale(1);
     }
     .modal-photo {
-      height: 260px;
+      height: 320px;
       overflow: hidden;
       border-radius: 1.5rem 1.5rem 0 0;
     }
@@ -216,7 +216,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: top center;
+      object-position: center 20%;
     }
     .modal-close {
       position: absolute;
@@ -296,15 +296,6 @@
       right: 0;
       background: linear-gradient(to left, white, transparent);
     }
-    .quotes-track {
-      display: flex;
-      gap: 1.5rem;
-      width: max-content;
-      animation: scrollLeft 40s linear infinite;
-    }
-    .quotes-track:hover {
-      animation-play-state: paused;
-    }
     .quote-card {
       width: 380px;
       flex-shrink: 0;
@@ -314,6 +305,18 @@
     .team-member-card {
       cursor: pointer;
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .team-member-card > div {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .team-member-card .card-text-zone {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 90px;
     }
     .team-member-card:hover {
       transform: translateY(-6px);
@@ -392,7 +395,7 @@
     @media (max-width: 640px) {
       .group-photo-banner img { height: 240px; }
       .quote-card { width: 300px; }
-      .modal-photo { height: 200px; }
+      .modal-photo { height: 250px; }
     }
   </style>
 </head>
@@ -630,19 +633,6 @@
         </p>
       </div>
 
-      <!-- Group Photo Banner -->
-      <div class="group-photo-banner mb-12 reveal">
-        <img src="images/entreprendre-ensemble-chateauneuf.jpg" alt="L'équipe Entreprendre Ensemble pour Châteauneuf" loading="lazy">
-        <div class="group-photo-overlay">
-          <h3 class="text-2xl sm:text-3xl font-bold text-white mb-2">Nous sommes votre équipe</h3>
-          <p class="text-white/80 text-lg mb-4">Cliquez sur chaque portrait pour découvrir leur parcours et leurs engagements</p>
-          <a href="#reunion" class="inline-flex items-center px-6 py-3 bg-white text-primary-700 font-semibold rounded-xl hover:bg-primary-50 transition-all duration-300 shadow-lg">
-            <i data-lucide="calendar" class="w-5 h-5 mr-2"></i>
-            Réunion publique — 11 mars à 19h
-          </a>
-        </div>
-      </div>
-
       <!-- Team Grid (rendered by JS from team.json) -->
       <div id="team-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 mb-14">
         <!-- Skeleton loaders -->
@@ -691,140 +681,55 @@
     </div>
 
     <div class="quotes-wrapper">
-      <div class="quotes-track" id="quotes-track">
-        <!-- Quote 1 - Laure Lamour -->
+      <div id="quotes-track" style="display:flex;gap:1.5rem;width:max-content;will-change:transform;">
+        <!-- 5 citations — dupliquées par JS pour la boucle infinie -->
         <div class="quote-card">
           <div class="bg-white rounded-2xl p-7 shadow-lg border border-gray-100 h-full">
-            <div class="text-primary-400 text-5xl font-serif leading-none mb-4">"</div>
+            <div class="text-5xl font-serif leading-none mb-4" style="color:#33C1EB">"</div>
             <p class="text-gray-700 text-base leading-relaxed mb-6 italic">Je souhaite faire de Châteauneuf une commune sereine et facile à vivre, du bourg jusqu'aux petits coins les plus reculés.</p>
             <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
               <img src="images/equipe/Laure Lamour.jpg" alt="Laure Lamour" class="w-12 h-12 rounded-full object-cover object-top" loading="lazy">
-              <div>
-                <p class="font-bold text-gray-800">Laure Lamour</p>
-                <p class="text-xs text-gray-500">Assistante audioprothésiste</p>
-              </div>
+              <div><p class="font-bold text-gray-800">Laure Lamour</p><p class="text-xs text-gray-500">Assistante audioprothésiste</p></div>
             </div>
           </div>
         </div>
-        <!-- Quote 2 - Azeline Cornut -->
         <div class="quote-card">
           <div class="bg-white rounded-2xl p-7 shadow-lg border border-gray-100 h-full">
-            <div class="text-secondary-400 text-5xl font-serif leading-none mb-4">"</div>
+            <div class="text-5xl font-serif leading-none mb-4" style="color:#F79F87">"</div>
             <p class="text-gray-700 text-base leading-relaxed mb-6 italic">Une commune pensée pour les enfants est une commune plus sûre, plus solidaire, plus durable et donc plus agréable pour tous.</p>
             <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
               <img src="images/equipe/Azeline Cornut.jpg" alt="Azeline Cornut" class="w-12 h-12 rounded-full object-cover object-top" loading="lazy">
-              <div>
-                <p class="font-bold text-gray-800">Azeline Cornut</p>
-                <p class="text-xs text-gray-500">Éclairagiste de théâtre</p>
-              </div>
+              <div><p class="font-bold text-gray-800">Azeline Cornut</p><p class="text-xs text-gray-500">Éclairagiste de théâtre</p></div>
             </div>
           </div>
         </div>
-        <!-- Quote 3 - Melissa Artus -->
         <div class="quote-card">
           <div class="bg-white rounded-2xl p-7 shadow-lg border border-gray-100 h-full">
-            <div class="text-accent-400 text-5xl font-serif leading-none mb-4">"</div>
+            <div class="text-5xl font-serif leading-none mb-4" style="color:#A7BF6F">"</div>
             <p class="text-gray-700 text-base leading-relaxed mb-6 italic">Mon engagement repose sur l'écoute, la proximité et l'action, au service de tous les habitants de Châteauneuf.</p>
             <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
               <img src="images/equipe/Melissa Artus.jpg" alt="Melissa Artus" class="w-12 h-12 rounded-full object-cover object-top" loading="lazy">
-              <div>
-                <p class="font-bold text-gray-800">Melissa Artus</p>
-                <p class="text-xs text-gray-500">Coiffeuse, gérante A'Melisse</p>
-              </div>
+              <div><p class="font-bold text-gray-800">Melissa Artus</p><p class="text-xs text-gray-500">Coiffeuse, gérante A'Melisse</p></div>
             </div>
           </div>
         </div>
-        <!-- Quote 4 - Annabelle Briand -->
         <div class="quote-card">
           <div class="bg-white rounded-2xl p-7 shadow-lg border border-gray-100 h-full">
-            <div class="text-primary-400 text-5xl font-serif leading-none mb-4">"</div>
+            <div class="text-5xl font-serif leading-none mb-4" style="color:#33C1EB">"</div>
             <p class="text-gray-700 text-base leading-relaxed mb-6 italic">Je souhaite apporter un nouveau dynamisme à la commune — être aux côtés des habitants pour montrer que la municipalité peut être à leur écoute.</p>
             <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
               <img src="images/equipe/Annabelle Briand.jpg" alt="Annabelle Briand" class="w-12 h-12 rounded-full object-cover object-top" loading="lazy">
-              <div>
-                <p class="font-bold text-gray-800">Annabelle Briand</p>
-                <p class="text-xs text-gray-500">Assistante comptable</p>
-              </div>
+              <div><p class="font-bold text-gray-800">Annabelle Briand</p><p class="text-xs text-gray-500">Assistante comptable</p></div>
             </div>
           </div>
         </div>
-        <!-- Quote 5 - Aurélien Bonnin -->
         <div class="quote-card">
           <div class="bg-white rounded-2xl p-7 shadow-lg border border-gray-100 h-full">
-            <div class="text-secondary-400 text-5xl font-serif leading-none mb-4">"</div>
+            <div class="text-5xl font-serif leading-none mb-4" style="color:#F79F87">"</div>
             <p class="text-gray-700 text-base leading-relaxed mb-6 italic">Je souhaite participer activement à la vie locale plutôt que rester simple observateur. Proximité, écoute, bon sens et esprit collectif.</p>
             <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
               <img src="images/equipe/Aurélien Bonnin.jpg" alt="Aurélien Bonnin" class="w-12 h-12 rounded-full object-cover object-top" loading="lazy">
-              <div>
-                <p class="font-bold text-gray-800">Aurélien Bonnin</p>
-                <p class="text-xs text-gray-500">Électricien</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Duplicate for seamless loop -->
-        <div class="quote-card">
-          <div class="bg-white rounded-2xl p-7 shadow-lg border border-gray-100 h-full">
-            <div class="text-primary-400 text-5xl font-serif leading-none mb-4">"</div>
-            <p class="text-gray-700 text-base leading-relaxed mb-6 italic">Je souhaite faire de Châteauneuf une commune sereine et facile à vivre, du bourg jusqu'aux petits coins les plus reculés.</p>
-            <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
-              <img src="images/equipe/Laure Lamour.jpg" alt="Laure Lamour" class="w-12 h-12 rounded-full object-cover object-top" loading="lazy">
-              <div>
-                <p class="font-bold text-gray-800">Laure Lamour</p>
-                <p class="text-xs text-gray-500">Assistante audioprothésiste</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="quote-card">
-          <div class="bg-white rounded-2xl p-7 shadow-lg border border-gray-100 h-full">
-            <div class="text-secondary-400 text-5xl font-serif leading-none mb-4">"</div>
-            <p class="text-gray-700 text-base leading-relaxed mb-6 italic">Une commune pensée pour les enfants est une commune plus sûre, plus solidaire, plus durable et donc plus agréable pour tous.</p>
-            <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
-              <img src="images/equipe/Azeline Cornut.jpg" alt="Azeline Cornut" class="w-12 h-12 rounded-full object-cover object-top" loading="lazy">
-              <div>
-                <p class="font-bold text-gray-800">Azeline Cornut</p>
-                <p class="text-xs text-gray-500">Éclairagiste de théâtre</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="quote-card">
-          <div class="bg-white rounded-2xl p-7 shadow-lg border border-gray-100 h-full">
-            <div class="text-accent-400 text-5xl font-serif leading-none mb-4">"</div>
-            <p class="text-gray-700 text-base leading-relaxed mb-6 italic">Mon engagement repose sur l'écoute, la proximité et l'action, au service de tous les habitants de Châteauneuf.</p>
-            <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
-              <img src="images/equipe/Melissa Artus.jpg" alt="Melissa Artus" class="w-12 h-12 rounded-full object-cover object-top" loading="lazy">
-              <div>
-                <p class="font-bold text-gray-800">Melissa Artus</p>
-                <p class="text-xs text-gray-500">Coiffeuse, gérante A'Melisse</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="quote-card">
-          <div class="bg-white rounded-2xl p-7 shadow-lg border border-gray-100 h-full">
-            <div class="text-primary-400 text-5xl font-serif leading-none mb-4">"</div>
-            <p class="text-gray-700 text-base leading-relaxed mb-6 italic">Je souhaite apporter un nouveau dynamisme à la commune — être aux côtés des habitants pour montrer que la municipalité peut être à leur écoute.</p>
-            <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
-              <img src="images/equipe/Annabelle Briand.jpg" alt="Annabelle Briand" class="w-12 h-12 rounded-full object-cover object-top" loading="lazy">
-              <div>
-                <p class="font-bold text-gray-800">Annabelle Briand</p>
-                <p class="text-xs text-gray-500">Assistante comptable</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="quote-card">
-          <div class="bg-white rounded-2xl p-7 shadow-lg border border-gray-100 h-full">
-            <div class="text-secondary-400 text-5xl font-serif leading-none mb-4">"</div>
-            <p class="text-gray-700 text-base leading-relaxed mb-6 italic">Je souhaite participer activement à la vie locale plutôt que rester simple observateur. Proximité, écoute, bon sens et esprit collectif.</p>
-            <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
-              <img src="images/equipe/Aurélien Bonnin.jpg" alt="Aurélien Bonnin" class="w-12 h-12 rounded-full object-cover object-top" loading="lazy">
-              <div>
-                <p class="font-bold text-gray-800">Aurélien Bonnin</p>
-                <p class="text-xs text-gray-500">Électricien</p>
-              </div>
+              <div><p class="font-bold text-gray-800">Aurélien Bonnin</p><p class="text-xs text-gray-500">Électricien</p></div>
             </div>
           </div>
         </div>
@@ -1139,10 +1044,10 @@
                 <span class="text-white text-xs font-semibold">Voir le profil →</span>
               </div>
             </div>
-            <div class="p-4 text-center">
+            <div class="card-text-zone p-4 text-center">
               <h4 class="font-bold text-gray-800 text-sm leading-snug">${displayName}</h4>
               ${ageStr ? `<p class="text-xs text-gray-400 mt-0.5">${ageStr}</p>` : ''}
-              ${profStr ? `<p class="text-xs font-medium mt-1" style="color:${scheme.textColor};overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">${profStr}</p>` : ''}
+              ${profStr ? `<p class="text-xs font-medium mt-1" style="color:${scheme.textColor};overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">${profStr}</p>` : '<p class="text-xs text-gray-300 mt-1 italic">Castelneuvien(ne)</p>'}
             </div>
           </div>
         </div>`;
@@ -1255,6 +1160,39 @@
         btnText.textContent = 'Recevoir le programme';
       }
     });
+
+    // ============ QUOTES CAROUSEL — JS requestAnimationFrame ============
+    (function initCarousel() {
+      const track = document.getElementById('quotes-track');
+      if (!track) return;
+
+      // Dupliquer les 5 cartes pour avoir une boucle sans saut
+      const origCards = track.innerHTML;
+      track.innerHTML += origCards;
+
+      let pos = 0;
+      const speed = 0.5; // pixels par frame (~30px/s à 60fps)
+      let paused = false;
+      let rafId;
+
+      track.addEventListener('mouseenter', () => { paused = true; });
+      track.addEventListener('mouseleave', () => { paused = false; });
+      // Touch support
+      track.addEventListener('touchstart', () => { paused = true; }, { passive: true });
+      track.addEventListener('touchend', () => { paused = false; });
+
+      function step() {
+        if (!paused) {
+          pos += speed;
+          // Quand on a défilé la moitié (les 5 originaux), retour à 0
+          const halfWidth = track.scrollWidth / 2;
+          if (pos >= halfWidth) pos = 0;
+          track.style.transform = 'translateX(' + (-pos) + 'px)';
+        }
+        rafId = requestAnimationFrame(step);
+      }
+      rafId = requestAnimationFrame(step);
+    })();
   </script>
 </body>
 </html>
