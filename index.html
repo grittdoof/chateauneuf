@@ -1053,10 +1053,9 @@
     closeMenuBtn.addEventListener('click', () => mobileMenu.classList.remove('open'));
     mobileMenu.querySelectorAll('a').forEach(link => link.addEventListener('click', () => mobileMenu.classList.remove('open')));
 
-    // Scroll reveal
-    const revealElements = document.querySelectorAll('.reveal');
+    // Scroll reveal — requery à chaque appel pour inclure les éléments générés dynamiquement
     const revealOnScroll = () => {
-      revealElements.forEach(el => {
+      document.querySelectorAll('.reveal').forEach(el => {
         if (el.getBoundingClientRect().top < window.innerHeight - 100) el.classList.add('active');
       });
     };
