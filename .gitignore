@@ -1,0 +1,12 @@
+# Données sensibles
+data/subscriptions.csv
+data/img-cache/
+.DS_Store
+images/.DS_Store
+
+# Config locale
+admin/config.local.php
+
+# Dépendances (si ajoutées ultérieurement)
+vendor/
+node_modules/
