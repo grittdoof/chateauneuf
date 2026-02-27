@@ -1,0 +1,9 @@
+# Protection du répertoire admin
+# Accès uniquement aux fichiers PHP via PHP
+Options -Indexes
+
+# Bloquer l'accès direct aux fichiers de config
+<FilesMatch "^(config|auth)\.php$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
