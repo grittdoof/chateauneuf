@@ -1,5 +1,6 @@
 # Données sensibles
 data/subscriptions.csv
+data/ideas.csv
 data/img-cache/
 .DS_Store
 images/.DS_Store

@@ -208,15 +208,32 @@
       transform: translateY(0) scale(1);
     }
     .modal-photo {
-      height: 320px;
       overflow: hidden;
-      border-radius: 1.5rem 1.5rem 0 0;
+      border-radius: 0;
+      display: flex;
+      background: linear-gradient(135deg, #0098D8 0%, #005B82 100%);
+      height: 340px;
     }
     .modal-photo img {
-      width: 100%;
+      width: 65%;
       height: 100%;
       object-fit: cover;
       object-position: center 20%;
+      flex-shrink: 0;
+      border-radius: 0;
+    }
+    .modal-photo-logo {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .modal-photo-logo img {
+      width: 80px;
+      height: auto;
+      opacity: 0.25;
+      filter: brightness(0) invert(1);
     }
     .modal-close {
       position: absolute;
@@ -337,10 +354,17 @@
     }
 
     /* ============ REUNION SECTION ============ */
-    .reunion-bg {
-      background-attachment: fixed;
-      background-size: cover;
-      background-position: center;
+    .reunion-gradient {
+      background: linear-gradient(-45deg, #001E2B, #0098D8, #005B82, #003D56, #007AAD, #001E2B);
+      background-size: 400% 400%;
+      animation: reunionGradient 12s ease infinite;
+    }
+    @keyframes reunionGradient {
+      0% { background-position: 0% 50%; }
+      25% { background-position: 100% 25%; }
+      50% { background-position: 100% 50%; }
+      75% { background-position: 0% 75%; }
+      100% { background-position: 0% 50%; }
     }
 
     /* ============ OPTIN FORM ============ */
@@ -392,10 +416,96 @@
       justify-content: flex-end;
       padding: 2rem;
     }
+
+    /* ============ HERO PHOTO SHOWCASE ============ */
+    .hero-photo-frame {
+      position: relative;
+      width: 320px;
+      height: 420px;
+      border-radius: 2rem;
+      overflow: hidden;
+      box-shadow:
+        0 30px 60px -15px rgba(0, 152, 216, 0.3),
+        0 0 0 1px rgba(0, 152, 216, 0.1);
+    }
+    .hero-photo-frame::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 2rem;
+      padding: 3px;
+      background: linear-gradient(135deg, #0098D8, #D35E2D, #6B8E23, #0098D8);
+      background-size: 300% 300%;
+      animation: borderGlow 6s ease infinite;
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .hero-photo-frame img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: auto;
+      min-width: 200%;
+      object-fit: cover;
+      animation: panZoom 18s ease-in-out infinite;
+    }
+    .hero-photo-frame::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,30,43,0.5) 0%, transparent 40%);
+      z-index: 1;
+      pointer-events: none;
+      border-radius: 2rem;
+    }
+    @keyframes panZoom {
+      0%   { transform: scale(1.15) translateX(5%); }
+      50%  { transform: scale(1.25) translateX(-40%); }
+      100% { transform: scale(1.15) translateX(5%); }
+    }
+    @keyframes borderGlow {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @media (max-width: 1024px) {
+      .hero-photo-frame {
+        width: 280px;
+        height: 370px;
+      }
+    }
+    @media (max-width: 640px) {
+      .hero-photo-frame {
+        width: 240px;
+        height: 320px;
+        border-radius: 1.5rem;
+      }
+      .hero-photo-frame::before {
+        border-radius: 1.5rem;
+      }
+      .hero-photo-frame::after {
+        border-radius: 1.5rem;
+      }
+    }
     @media (max-width: 640px) {
       .group-photo-banner img { height: 240px; }
       .quote-card { width: 300px; }
-      .modal-photo { height: 250px; }
+      .modal-container { max-width: 95vw; }
+      .modal-photo {
+        display: block;
+        height: auto;
+      }
+      .modal-photo img {
+        width: 100%;
+        height: 280px;
+      }
+      .modal-photo-logo {
+        display: none;
+      }
     }
   </style>
 </head>
@@ -412,7 +522,6 @@
         <div class="hidden md:flex items-center space-x-8">
           <a href="#accueil" class="text-gray-700 hover:text-primary-500 font-medium transition-colors">Accueil</a>
           <a href="#valeurs" class="text-gray-700 hover:text-primary-500 font-medium transition-colors">Nos valeurs</a>
-          <a href="#engagements" class="text-gray-700 hover:text-primary-500 font-medium transition-colors">Engagements</a>
           <a href="#equipe" class="text-gray-700 hover:text-primary-500 font-medium transition-colors">L'équipe</a>
           <a href="#programme" class="text-gray-700 hover:text-primary-500 font-medium transition-colors">Programme</a>
           <a href="#contact" class="bg-gradient-to-r from-primary-500 to-primary-600 text-white px-6 py-2.5 rounded-full font-semibold hover:shadow-lg hover:shadow-primary-500/30 transition-all duration-300 hover:-translate-y-0.5">
@@ -436,7 +545,6 @@
     <div class="flex flex-col space-y-6">
       <a href="#accueil" class="text-gray-700 hover:text-primary-500 font-medium text-lg transition-colors">Accueil</a>
       <a href="#valeurs" class="text-gray-700 hover:text-primary-500 font-medium text-lg transition-colors">Nos valeurs</a>
-      <a href="#engagements" class="text-gray-700 hover:text-primary-500 font-medium text-lg transition-colors">Engagements</a>
       <a href="#equipe" class="text-gray-700 hover:text-primary-500 font-medium text-lg transition-colors">L'équipe</a>
       <a href="#programme" class="text-gray-700 hover:text-primary-500 font-medium text-lg transition-colors">Programme</a>
       <a href="#contact" class="bg-gradient-to-r from-primary-500 to-primary-600 text-white px-6 py-3 rounded-full font-semibold text-center mt-4">Contact</a>
@@ -457,32 +565,37 @@
             <span class="text-sm font-medium text-gray-600">Élections Municipales 2026</span>
           </div>
           <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6">
-            <span class="gradient-text">Entreprendre Ensemble</span>
+            <span class="text-primary-600">Entreprendre</span>
+            <span class="text-secondary-500">Ensemble</span>
             <br>
-            <span class="text-gray-800">pour Châteauneuf</span>
+            <span class="text-accent-600">pour Châteauneuf</span>
           </h1>
           <p class="text-xl text-gray-600 mb-8 leading-relaxed">
-            Une équipe <span class="font-semibold text-primary-600">souriante</span>,
-            <span class="font-semibold text-secondary-500">sympathique</span>,
-            <span class="font-semibold text-accent-600">à l'écoute</span> et
-            <span class="font-semibold text-primary-600">enthousiaste</span>
-            pour construire l'avenir de notre commune.
+            Une équipe 
+            <span class="font-semibold text-primary-600">à l'écoute</span> et
+            <span class="font-semibold text-secondary-500">enthousiaste</span>
+            pour construire <span class="font-semibold text-accent-600">l'avenir</span> de notre commune.
           </p>
           <div class="flex flex-col sm:flex-row gap-4">
-            <a href="#engagements" class="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold rounded-xl shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 hover:-translate-y-1 transition-all duration-300">
-              Découvrir nos engagements
+            <a href="#equipe" class="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold rounded-xl shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 hover:-translate-y-1 transition-all duration-300">
+              Découvrir notre équipe
               <i data-lucide="arrow-right" class="w-5 h-5 ml-2"></i>
             </a>
-            <a href="#equipe" class="inline-flex items-center justify-center px-8 py-4 bg-white text-gray-700 font-semibold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-200">
-              Rencontrer l'équipe
-              <i data-lucide="users" class="w-5 h-5 ml-2"></i>
-            </a>
+            <button onclick="document.getElementById('idea-modal').classList.add('active');document.body.style.overflow='hidden'" class="inline-flex items-center justify-center px-8 py-4 bg-white text-gray-700 font-semibold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-200 cursor-pointer">
+              Soumettre une idée
+              <i data-lucide="lightbulb" class="w-5 h-5 ml-2"></i>
+            </button>
           </div>
         </div>
         <div class="reveal flex justify-center lg:justify-end" style="animation-delay: 0.2s;">
           <div class="relative">
-            <div class="absolute inset-0 bg-gradient-to-r from-primary-400 to-accent-400 rounded-full blur-3xl opacity-20 scale-110"></div>
-            <img src="images/logo-chateauneuf.png" alt="Châteauneuf Vendée" class="relative w-80 lg:w-96 animate-float">
+            <div class="absolute -inset-8 bg-gradient-to-r from-primary-300 to-accent-300 rounded-full blur-3xl opacity-25 scale-110 animate-pulse-slow"></div>
+            <div class="hero-photo-frame relative">
+              <img src="images/entreprendre-ensemble-chateauneuf.jpg" alt="L'équipe Entreprendre Ensemble pour Châteauneuf">
+              <div style="position:absolute;bottom:1.25rem;left:1.25rem;right:1.25rem;z-index:3;text-align:center">
+                <span style="display:inline-block;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.3);color:white;font-size:.75rem;font-weight:600;padding:.4rem 1rem;border-radius:9999px;letter-spacing:.03em">17 Castelneuviens engagés</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -527,92 +640,7 @@
             <i data-lucide="heart" class="w-8 h-8 text-white"></i>
           </div>
           <h3 class="text-xl font-bold text-gray-800 mb-3">Engagement</h3>
-          <p class="text-gray-600 leading-relaxed">Notre engagement est sincère et durable. Nous ne faisons pas de promesses impossibles, nous agissons concrètement pour vous.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Engagements Section -->
-  <section id="engagements" class="py-24 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
-    <div class="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-primary-50 to-transparent opacity-50"></div>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-      <div class="text-center mb-16 reveal">
-        <span class="inline-block px-4 py-1 bg-secondary-100 text-secondary-600 rounded-full text-sm font-semibold mb-4">Nos priorités</span>
-        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-800 mb-4">
-          5 engagements <span class="gradient-text">concrets</span>
-        </h2>
-        <p class="text-xl text-gray-600 max-w-3xl mx-auto">Des projets réalistes pour améliorer le quotidien des Castelneuviens</p>
-      </div>
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div class="reveal bg-white rounded-2xl p-8 shadow-lg card-hover relative overflow-hidden group" style="animation-delay: 0.1s;">
-          <div class="number-badge absolute -top-3 -left-3 w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg">1</div>
-          <div class="w-14 h-14 engagement-icon rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-primary-500/20 group-hover:scale-110 transition-transform duration-300">
-            <i data-lucide="school" class="w-7 h-7 text-white"></i>
-          </div>
-          <h3 class="text-xl font-bold text-gray-800 mb-3">École & développement</h3>
-          <p class="text-gray-600 mb-4">Une fermeture de classe cette année. Une suppression de poste. C'est un signal d'alarme.</p>
-          <div class="bg-primary-50 border-l-4 border-primary-500 p-4 rounded-r-lg mb-4">
-            <p class="text-primary-700 font-semibold text-sm">Une école vivante = une commune d'avenir</p>
-          </div>
-          <p class="text-gray-600 text-sm"><strong>Notre action :</strong> Plan foncier concerté pour accueillir <span class="text-primary-600 font-bold">+50 familles en 6 ans</span></p>
-        </div>
-        <div class="reveal bg-white rounded-2xl p-8 shadow-lg card-hover relative overflow-hidden group" style="animation-delay: 0.15s;">
-          <div class="number-badge absolute -top-3 -left-3 w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg">2</div>
-          <div class="w-14 h-14 engagement-icon rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-primary-500/20 group-hover:scale-110 transition-transform duration-300">
-            <i data-lucide="hand-heart" class="w-7 h-7 text-white"></i>
-          </div>
-          <h3 class="text-xl font-bold text-gray-800 mb-3">Dynamique associative</h3>
-          <p class="text-gray-600 mb-4">Passer du soutien ponctuel à une vraie stratégie d'animation annuelle.</p>
-          <ul class="space-y-2 text-gray-600 text-sm">
-            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-accent-500 mr-2"></i>Budget participatif associatif</li>
-            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-accent-500 mr-2"></i>Aide renforcée pour l'été</li>
-            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-accent-500 mr-2"></i>Accompagnement des bénévoles</li>
-          </ul>
-        </div>
-        <div class="reveal bg-white rounded-2xl p-8 shadow-lg card-hover relative overflow-hidden group" style="animation-delay: 0.2s;">
-          <div class="number-badge absolute -top-3 -left-3 w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg">3</div>
-          <div class="w-14 h-14 engagement-icon rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-primary-500/20 group-hover:scale-110 transition-transform duration-300">
-            <i data-lucide="sprout" class="w-7 h-7 text-white"></i>
-          </div>
-          <h3 class="text-xl font-bold text-gray-800 mb-3">Engagement jeunesse</h3>
-          <p class="text-gray-600 mb-4">Nos jeunes, premiers acteurs de leur territoire.</p>
-          <ul class="space-y-2 text-gray-600 text-sm">
-            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-accent-500 mr-2"></i>Plantation d'arbres & pédagogie</li>
-            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-accent-500 mr-2"></i>Sensibilisation environnementale</li>
-            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-accent-500 mr-2"></i>Découverte agricole et entreprise locale</li>
-          </ul>
-        </div>
-        <div class="reveal bg-white rounded-2xl p-8 shadow-lg card-hover relative overflow-hidden group" style="animation-delay: 0.25s;">
-          <div class="number-badge absolute -top-3 -left-3 w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg">4</div>
-          <div class="w-14 h-14 engagement-icon rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-primary-500/20 group-hover:scale-110 transition-transform duration-300">
-            <i data-lucide="heart-pulse" class="w-7 h-7 text-white"></i>
-          </div>
-          <h3 class="text-xl font-bold text-gray-800 mb-3">Pôle santé</h3>
-          <p class="text-gray-600 mb-4">Consultation publique pour créer un vrai pôle santé communal.</p>
-          <div class="bg-accent-50 border-l-4 border-accent-500 p-4 rounded-r-lg">
-            <p class="text-accent-700 font-semibold text-sm">Soyons attractifs pour nos futurs médecins</p>
-          </div>
-        </div>
-        <div class="reveal bg-white rounded-2xl p-8 shadow-lg card-hover relative overflow-hidden group" style="animation-delay: 0.3s;">
-          <div class="number-badge absolute -top-3 -left-3 w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg">5</div>
-          <div class="w-14 h-14 engagement-icon rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-primary-500/20 group-hover:scale-110 transition-transform duration-300">
-            <i data-lucide="piggy-bank" class="w-7 h-7 text-white"></i>
-          </div>
-          <h3 class="text-xl font-bold text-gray-800 mb-3">Rigueur budgétaire</h3>
-          <p class="text-gray-600 mb-4">Votre argent mérite des projets utiles dans l'intérêt général.</p>
-          <div class="bg-secondary-50 border-l-4 border-secondary-500 p-4 rounded-r-lg">
-            <p class="text-secondary-700 font-semibold text-sm">Chaque euro investi améliore la vie à Châteauneuf</p>
-          </div>
-        </div>
-        <div class="reveal bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl p-8 shadow-xl card-hover flex flex-col justify-center items-center text-center" style="animation-delay: 0.35s;">
-          <i data-lucide="calendar-check" class="w-12 h-12 text-white/80 mb-4"></i>
-          <h3 class="text-xl font-bold text-white mb-3">11 mars — Réunion publique</h3>
-          <p class="text-white/80 mb-6">Venez découvrir notre programme complet à la salle communale, 19h00</p>
-          <a href="#reunion" class="inline-flex items-center px-6 py-3 bg-white text-primary-600 font-semibold rounded-xl hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-            Je viens !
-            <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
-          </a>
+          <p class="text-gray-600 leading-relaxed">Nous agirons pour proposer des projets concrets et utiles aux Castelneuviens. Chaque projet important fera l'objet d'une consultation citoyenne.</p>
         </div>
       </div>
     </div>
@@ -651,7 +679,7 @@
             Événement à ne pas manquer
           </div>
           <h3 class="text-2xl sm:text-3xl font-bold mb-2">Venez nous rencontrer !</h3>
-          <p class="text-white/80 text-lg">Réunion publique • Mardi 11 mars 2026 • 19h00 • Salle communale de Châteauneuf</p>
+          <p class="text-white/80 text-lg">Réunion publique • Mercredi 11 mars 2026 • 19h00 • Salle communale de Châteauneuf</p>
         </div>
         <div class="flex flex-col sm:flex-row gap-3 flex-shrink-0">
           <a href="#reunion" class="inline-flex items-center justify-center px-8 py-4 bg-white text-primary-700 font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
@@ -680,56 +708,67 @@
       </div>
     </div>
 
-    <div class="quotes-wrapper">
-      <div id="quotes-track" style="display:flex;gap:1.5rem;width:max-content;will-change:transform;">
-        <!-- 5 citations — dupliquées par JS pour la boucle infinie -->
-        <div class="quote-card">
-          <div class="bg-white rounded-2xl p-7 shadow-lg border border-gray-100 h-full">
-            <div class="text-5xl font-serif leading-none mb-4" style="color:#33C1EB">"</div>
-            <p class="text-gray-700 text-base leading-relaxed mb-6 italic">Je souhaite faire de Châteauneuf une commune sereine et facile à vivre, du bourg jusqu'aux petits coins les plus reculés.</p>
-            <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
-              <img src="images/equipe/Laure Lamour.jpg" alt="Laure Lamour" class="w-12 h-12 rounded-full object-cover object-top" loading="lazy">
-              <div><p class="font-bold text-gray-800">Laure Lamour</p><p class="text-xs text-gray-500">Assistante audioprothésiste</p></div>
+    <div class="relative">
+      <!-- Arrow Left -->
+      <button id="carousel-prev" style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);z-index:20;width:3rem;height:3rem;border-radius:9999px;background:white;border:none;box-shadow:0 4px 15px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;opacity:.9" onmouseover="this.style.opacity='1';this.style.transform='translateY(-50%) scale(1.1)'" onmouseout="this.style.opacity='.9';this.style.transform='translateY(-50%)'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0098D8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <!-- Arrow Right -->
+      <button id="carousel-next" style="position:absolute;right:1rem;top:50%;transform:translateY(-50%);z-index:20;width:3rem;height:3rem;border-radius:9999px;background:white;border:none;box-shadow:0 4px 15px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;opacity:.9" onmouseover="this.style.opacity='1';this.style.transform='translateY(-50%) scale(1.1)'" onmouseout="this.style.opacity='.9';this.style.transform='translateY(-50%)'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0098D8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+
+      <div class="quotes-wrapper">
+        <div id="quotes-track" style="display:flex;gap:1.5rem;width:max-content;will-change:transform;">
+          <!-- 5 citations — dupliquées par JS pour la boucle infinie -->
+          <div class="quote-card">
+            <div class="bg-white rounded-2xl p-7 shadow-lg border border-gray-100 h-full">
+              <div class="text-5xl font-serif leading-none mb-4" style="color:#33C1EB">"</div>
+              <p class="text-gray-700 text-base leading-relaxed mb-6 italic">Je souhaite faire de Châteauneuf une commune sereine et facile à vivre, du bourg jusqu'aux petits coins les plus reculés.</p>
+              <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
+                <img src="images/equipe/Laure Lamour.jpg" alt="Laure Lamour" class="w-12 h-12 rounded-full object-cover object-top" loading="lazy">
+                <div><p class="font-bold text-gray-800">Laure Lamour</p><p class="text-xs text-gray-500">Assistante audioprothésiste</p></div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="quote-card">
-          <div class="bg-white rounded-2xl p-7 shadow-lg border border-gray-100 h-full">
-            <div class="text-5xl font-serif leading-none mb-4" style="color:#F79F87">"</div>
-            <p class="text-gray-700 text-base leading-relaxed mb-6 italic">Une commune pensée pour les enfants est une commune plus sûre, plus solidaire, plus durable et donc plus agréable pour tous.</p>
-            <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
-              <img src="images/equipe/Azeline Cornut.jpg" alt="Azeline Cornut" class="w-12 h-12 rounded-full object-cover object-top" loading="lazy">
-              <div><p class="font-bold text-gray-800">Azeline Cornut</p><p class="text-xs text-gray-500">Éclairagiste de théâtre</p></div>
+          <div class="quote-card">
+            <div class="bg-white rounded-2xl p-7 shadow-lg border border-gray-100 h-full">
+              <div class="text-5xl font-serif leading-none mb-4" style="color:#F79F87">"</div>
+              <p class="text-gray-700 text-base leading-relaxed mb-6 italic">Une commune pensée pour les enfants est une commune plus sûre, plus solidaire, plus durable et donc plus agréable pour tous.</p>
+              <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
+                <img src="images/equipe/Azeline Cornut.jpg" alt="Azeline Cornut" class="w-12 h-12 rounded-full object-cover object-top" loading="lazy">
+                <div><p class="font-bold text-gray-800">Azeline Cornut</p><p class="text-xs text-gray-500">Éclairagiste de théâtre</p></div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="quote-card">
-          <div class="bg-white rounded-2xl p-7 shadow-lg border border-gray-100 h-full">
-            <div class="text-5xl font-serif leading-none mb-4" style="color:#A7BF6F">"</div>
-            <p class="text-gray-700 text-base leading-relaxed mb-6 italic">Mon engagement repose sur l'écoute, la proximité et l'action, au service de tous les habitants de Châteauneuf.</p>
-            <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
-              <img src="images/equipe/Melissa Artus.jpg" alt="Melissa Artus" class="w-12 h-12 rounded-full object-cover object-top" loading="lazy">
-              <div><p class="font-bold text-gray-800">Melissa Artus</p><p class="text-xs text-gray-500">Coiffeuse, gérante A'Melisse</p></div>
+          <div class="quote-card">
+            <div class="bg-white rounded-2xl p-7 shadow-lg border border-gray-100 h-full">
+              <div class="text-5xl font-serif leading-none mb-4" style="color:#A7BF6F">"</div>
+              <p class="text-gray-700 text-base leading-relaxed mb-6 italic">Mon engagement repose sur l'écoute, la proximité et l'action, au service de tous les habitants de Châteauneuf.</p>
+              <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
+                <img src="images/equipe/Melissa Artus.jpg" alt="Melissa Artus" class="w-12 h-12 rounded-full object-cover object-top" loading="lazy">
+                <div><p class="font-bold text-gray-800">Melissa Artus</p><p class="text-xs text-gray-500">Coiffeuse, gérante A'Melisse</p></div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="quote-card">
-          <div class="bg-white rounded-2xl p-7 shadow-lg border border-gray-100 h-full">
-            <div class="text-5xl font-serif leading-none mb-4" style="color:#33C1EB">"</div>
-            <p class="text-gray-700 text-base leading-relaxed mb-6 italic">Je souhaite apporter un nouveau dynamisme à la commune — être aux côtés des habitants pour montrer que la municipalité peut être à leur écoute.</p>
-            <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
-              <img src="images/equipe/Annabelle Briand.jpg" alt="Annabelle Briand" class="w-12 h-12 rounded-full object-cover object-top" loading="lazy">
-              <div><p class="font-bold text-gray-800">Annabelle Briand</p><p class="text-xs text-gray-500">Assistante comptable</p></div>
+          <div class="quote-card">
+            <div class="bg-white rounded-2xl p-7 shadow-lg border border-gray-100 h-full">
+              <div class="text-5xl font-serif leading-none mb-4" style="color:#33C1EB">"</div>
+              <p class="text-gray-700 text-base leading-relaxed mb-6 italic">Je souhaite apporter un nouveau dynamisme à la commune — être aux côtés des habitants pour montrer que la municipalité peut être à leur écoute.</p>
+              <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
+                <img src="images/equipe/Annabelle Briand.jpg" alt="Annabelle Briand" class="w-12 h-12 rounded-full object-cover object-top" loading="lazy">
+                <div><p class="font-bold text-gray-800">Annabelle Briand</p><p class="text-xs text-gray-500">Assistante comptable</p></div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="quote-card">
-          <div class="bg-white rounded-2xl p-7 shadow-lg border border-gray-100 h-full">
-            <div class="text-5xl font-serif leading-none mb-4" style="color:#F79F87">"</div>
-            <p class="text-gray-700 text-base leading-relaxed mb-6 italic">Je souhaite participer activement à la vie locale plutôt que rester simple observateur. Proximité, écoute, bon sens et esprit collectif.</p>
-            <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
-              <img src="images/equipe/Aurélien Bonnin.jpg" alt="Aurélien Bonnin" class="w-12 h-12 rounded-full object-cover object-top" loading="lazy">
-              <div><p class="font-bold text-gray-800">Aurélien Bonnin</p><p class="text-xs text-gray-500">Électricien</p></div>
+          <div class="quote-card">
+            <div class="bg-white rounded-2xl p-7 shadow-lg border border-gray-100 h-full">
+              <div class="text-5xl font-serif leading-none mb-4" style="color:#F79F87">"</div>
+              <p class="text-gray-700 text-base leading-relaxed mb-6 italic">Je souhaite participer activement à la vie locale plutôt que rester simple observateur. Proximité, écoute, bon sens et esprit collectif.</p>
+              <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
+                <img src="images/equipe/Aurélien Bonnin.jpg" alt="Aurélien Bonnin" class="w-12 h-12 rounded-full object-cover object-top" loading="lazy">
+                <div><p class="font-bold text-gray-800">Aurélien Bonnin</p><p class="text-xs text-gray-500">Électricien</p></div>
+              </div>
             </div>
           </div>
         </div>
@@ -738,12 +777,7 @@
   </section>
 
   <!-- ============ REUNION PUBLIQUE ============ -->
-  <section id="reunion" class="relative py-0 overflow-hidden min-h-[600px] flex items-center">
-    <!-- Background image -->
-    <div class="absolute inset-0">
-      <img src="images/entreprendre-ensemble-chateauneuf.jpg" alt="L'équipe Entreprendre Ensemble" class="w-full h-full object-cover object-center">
-      <div class="absolute inset-0 bg-gradient-to-br from-primary-900/88 via-primary-800/80 to-primary-900/90"></div>
-    </div>
+  <section id="reunion" class="relative py-0 overflow-hidden min-h-[600px] flex items-center reunion-gradient">
     <!-- Content -->
     <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
       <div class="max-w-3xl mx-auto text-center">
@@ -764,7 +798,7 @@
             <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mx-auto mb-3">
               <i data-lucide="calendar" class="w-6 h-6"></i>
             </div>
-            <p class="font-bold text-lg">Mardi 11 mars</p>
+            <p class="font-bold text-lg">Mercredi 11 mars</p>
             <p class="text-white/70 text-sm">2026</p>
           </div>
           <div class="bg-white/15 backdrop-blur border border-white/30 rounded-2xl p-5 text-white text-center">
@@ -912,7 +946,6 @@
           <ul class="space-y-2 text-gray-400 text-sm">
             <li><a href="#accueil" class="hover:text-white transition-colors">Accueil</a></li>
             <li><a href="#valeurs" class="hover:text-white transition-colors">Nos valeurs</a></li>
-            <li><a href="#engagements" class="hover:text-white transition-colors">Engagements</a></li>
             <li><a href="#equipe" class="hover:text-white transition-colors">L'équipe</a></li>
             <li><a href="#reunion" class="hover:text-white transition-colors">Réunion publique</a></li>
             <li><a href="#programme" class="hover:text-white transition-colors">Recevoir le programme</a></li>
@@ -935,6 +968,96 @@
 
   <!-- ============ MODALS CONTAINER ============ -->
   <div id="modals-container"></div>
+
+  <!-- ============ MODAL IDÉE ============ -->
+  <div id="idea-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Soumettre une idée">
+    <div class="modal-container" style="max-width:560px">
+      <button class="modal-close" onclick="document.getElementById('idea-modal').classList.remove('active');document.body.style.overflow=''" aria-label="Fermer">✕</button>
+
+      <!-- Header -->
+      <div style="background:linear-gradient(135deg,#0098D8 0%,#005B82 100%);padding:2rem 2rem 1.5rem;display:flex;align-items:center;gap:1rem">
+        <div style="width:3rem;height:3rem;background:rgba(255,255,255,.2);border-radius:.75rem;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i data-lucide="lightbulb" style="width:1.5rem;height:1.5rem;color:white"></i>
+        </div>
+        <div>
+          <h3 style="font-size:1.25rem;font-weight:700;color:white;margin:0">Soumettre une idée</h3>
+          <p style="font-size:.85rem;color:rgba(255,255,255,.75);margin:.25rem 0 0">Partagez vos propositions pour Châteauneuf</p>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="p-6 sm:p-8">
+        <div id="idea-success" class="hidden text-center py-6">
+          <div style="width:4.5rem;height:4.5rem;background:#E9EFDB;border-radius:9999px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem">
+            <i data-lucide="check-circle" style="width:2.5rem;height:2.5rem;color:#56721C"></i>
+          </div>
+          <h4 style="font-size:1.25rem;font-weight:700;color:#1f2937;margin-bottom:.5rem">Merci pour votre idée !</h4>
+          <p style="color:#6b7280;font-size:.9rem">Votre proposition a bien été envoyée à l'équipe. Vous recevrez une confirmation par email.</p>
+        </div>
+
+        <form id="idea-form" novalidate>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.875rem;margin-bottom:.875rem">
+            <div>
+              <label class="form-label" for="idea-prenom">Prénom <span class="text-red-500">*</span></label>
+              <input type="text" id="idea-prenom" name="prenom" class="form-input" placeholder="Votre prénom" required>
+              <p class="text-red-500 text-xs mt-1 hidden" id="idea-prenom-error">Prénom requis</p>
+            </div>
+            <div>
+              <label class="form-label" for="idea-nom">Nom <span class="text-red-500">*</span></label>
+              <input type="text" id="idea-nom" name="nom" class="form-input" placeholder="Votre nom" required>
+              <p class="text-red-500 text-xs mt-1 hidden" id="idea-nom-error">Nom requis</p>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.875rem;margin-bottom:.875rem">
+            <div>
+              <label class="form-label" for="idea-email">Email <span class="text-red-500">*</span></label>
+              <input type="email" id="idea-email" name="email" class="form-input" placeholder="votre@email.fr" required>
+              <p class="text-red-500 text-xs mt-1 hidden" id="idea-email-error">Email valide requis</p>
+            </div>
+            <div>
+              <label class="form-label" for="idea-telephone">Téléphone <span class="text-red-500">*</span></label>
+              <input type="tel" id="idea-telephone" name="telephone" class="form-input" placeholder="06 XX XX XX XX" required>
+              <p class="text-red-500 text-xs mt-1 hidden" id="idea-telephone-error">Téléphone requis</p>
+            </div>
+          </div>
+          <div style="margin-bottom:.875rem">
+            <label class="form-label" for="idea-sujet">Sujet <span class="text-red-500">*</span></label>
+            <select id="idea-sujet" name="sujet" class="form-input" required style="appearance:auto">
+              <option value="">— Choisir une thématique —</option>
+              <option value="Urbanisme & cadre de vie">Urbanisme & cadre de vie</option>
+              <option value="École & petite enfance">École & petite enfance</option>
+              <option value="Sécurité & voirie">Sécurité & voirie</option>
+              <option value="Environnement & espaces verts">Environnement & espaces verts</option>
+              <option value="Sport & loisirs">Sport & loisirs</option>
+              <option value="Culture & associations">Culture & associations</option>
+              <option value="Santé & solidarité">Santé & solidarité</option>
+              <option value="Commerce & économie locale">Commerce & économie locale</option>
+              <option value="Transport & mobilité">Transport & mobilité</option>
+              <option value="Autre">Autre</option>
+            </select>
+            <p class="text-red-500 text-xs mt-1 hidden" id="idea-sujet-error">Veuillez choisir un sujet</p>
+          </div>
+          <div style="margin-bottom:1.25rem">
+            <label class="form-label" for="idea-message">Votre idée <span class="text-red-500">*</span></label>
+            <textarea id="idea-message" name="message" class="form-input" rows="4" placeholder="Décrivez votre idée ou proposition pour la commune…" required style="resize:vertical;min-height:100px"></textarea>
+            <p class="text-red-500 text-xs mt-1 hidden" id="idea-message-error">Merci de décrire votre idée</p>
+          </div>
+
+          <div id="idea-error-msg" class="hidden bg-red-50 text-red-700 rounded-xl p-4 mb-4 text-sm"></div>
+
+          <button type="submit" id="idea-submit-btn" class="w-full py-3.5 px-8 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-bold rounded-xl text-base shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2">
+            <i data-lucide="send" class="w-4 h-4"></i>
+            <span id="idea-submit-text">Envoyer mon idée</span>
+          </button>
+
+          <p style="text-align:center;color:#9ca3af;font-size:.7rem;margin-top:.875rem">
+            <i data-lucide="lock" style="width:.7rem;height:.7rem;display:inline;margin-right:.25rem"></i>
+            Vos données restent confidentielles et ne seront jamais partagées.
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
 
   <!-- Scripts -->
   <script>
@@ -1062,6 +1185,7 @@
             <button class="modal-close" onclick="closeModal(${member.id})" aria-label="Fermer">✕</button>
             <div class="modal-photo">
               <img src="${member.photo}" alt="${displayName}" onerror="this.src='images/logo-chateauneuf.png'; this.style.objectFit='contain'; this.style.padding='2rem'; this.style.background='#e8f4fb'">
+              <div class="modal-photo-logo"><img src="images/logo.png" alt=""></div>
             </div>
             <div class="p-6 sm:p-8">
               <div class="flex items-start gap-3 mb-5">
@@ -1161,7 +1285,7 @@
       }
     });
 
-    // ============ QUOTES CAROUSEL — JS requestAnimationFrame ============
+    // ============ QUOTES CAROUSEL — JS requestAnimationFrame + Arrows ============
     (function initCarousel() {
       const track = document.getElementById('quotes-track');
       if (!track) return;
@@ -1174,12 +1298,44 @@
       const speed = 0.5; // pixels par frame (~30px/s à 60fps)
       let paused = false;
       let rafId;
+      const cardWidth = 380 + 24; // quote-card width + gap (1.5rem)
 
       track.addEventListener('mouseenter', () => { paused = true; });
       track.addEventListener('mouseleave', () => { paused = false; });
       // Touch support
       track.addEventListener('touchstart', () => { paused = true; }, { passive: true });
       track.addEventListener('touchend', () => { paused = false; });
+
+      // Arrow navigation
+      const prevBtn = document.getElementById('carousel-prev');
+      const nextBtn = document.getElementById('carousel-next');
+
+      function smoothJump(targetPos) {
+        const startPos = pos;
+        const diff = targetPos - startPos;
+        const duration = 400;
+        const startTime = performance.now();
+        paused = true;
+        function animate(now) {
+          const elapsed = now - startTime;
+          const t = Math.min(elapsed / duration, 1);
+          const ease = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+          pos = startPos + diff * ease;
+          const halfWidth = track.scrollWidth / 2;
+          if (pos < 0) pos += halfWidth;
+          if (pos >= halfWidth) pos -= halfWidth;
+          track.style.transform = 'translateX(' + (-pos) + 'px)';
+          if (t < 1) {
+            requestAnimationFrame(animate);
+          } else {
+            paused = false;
+          }
+        }
+        requestAnimationFrame(animate);
+      }
+
+      if (prevBtn) prevBtn.addEventListener('click', () => { smoothJump(pos - cardWidth); });
+      if (nextBtn) nextBtn.addEventListener('click', () => { smoothJump(pos + cardWidth); });
 
       function step() {
         if (!paused) {
@@ -1192,6 +1348,79 @@
         rafId = requestAnimationFrame(step);
       }
       rafId = requestAnimationFrame(step);
+    })();
+
+    // ============ IDÉE FORM ============
+    (function() {
+      const ideaModal = document.getElementById('idea-modal');
+      if (!ideaModal) return;
+
+      // Fermer au clic overlay
+      ideaModal.addEventListener('click', function(e) {
+        if (e.target === ideaModal) {
+          ideaModal.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      });
+
+      const ideaForm = document.getElementById('idea-form');
+      ideaForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const fields = ['idea-prenom', 'idea-nom', 'idea-email', 'idea-telephone', 'idea-sujet', 'idea-message'];
+        fields.forEach(f => {
+          document.getElementById(f).classList.remove('error');
+          document.getElementById(f + '-error').classList.add('hidden');
+        });
+        document.getElementById('idea-error-msg').classList.add('hidden');
+
+        const prenom = document.getElementById('idea-prenom').value.trim();
+        const nom = document.getElementById('idea-nom').value.trim();
+        const email = document.getElementById('idea-email').value.trim();
+        const telephone = document.getElementById('idea-telephone').value.trim();
+        const sujet = document.getElementById('idea-sujet').value;
+        const message = document.getElementById('idea-message').value.trim();
+
+        let valid = true;
+        if (!prenom) { document.getElementById('idea-prenom').classList.add('error'); document.getElementById('idea-prenom-error').classList.remove('hidden'); valid = false; }
+        if (!nom) { document.getElementById('idea-nom').classList.add('error'); document.getElementById('idea-nom-error').classList.remove('hidden'); valid = false; }
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { document.getElementById('idea-email').classList.add('error'); document.getElementById('idea-email-error').classList.remove('hidden'); valid = false; }
+        if (!telephone) { document.getElementById('idea-telephone').classList.add('error'); document.getElementById('idea-telephone-error').classList.remove('hidden'); valid = false; }
+        if (!sujet) { document.getElementById('idea-sujet').classList.add('error'); document.getElementById('idea-sujet-error').classList.remove('hidden'); valid = false; }
+        if (!message) { document.getElementById('idea-message').classList.add('error'); document.getElementById('idea-message-error').classList.remove('hidden'); valid = false; }
+        if (!valid) return;
+
+        const btn = document.getElementById('idea-submit-btn');
+        const btnText = document.getElementById('idea-submit-text');
+        btn.disabled = true;
+        btnText.textContent = 'Envoi en cours…';
+
+        try {
+          const resp = await fetch('submit-idea.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prenom, nom, email, telephone, sujet, message })
+          });
+          const result = await resp.json();
+          if (result.success) {
+            ideaForm.classList.add('hidden');
+            document.getElementById('idea-success').classList.remove('hidden');
+            lucide.createIcons();
+          } else {
+            const errDiv = document.getElementById('idea-error-msg');
+            errDiv.textContent = result.message || 'Une erreur est survenue. Veuillez réessayer.';
+            errDiv.classList.remove('hidden');
+            btn.disabled = false;
+            btnText.textContent = 'Envoyer mon idée';
+          }
+        } catch {
+          const errDiv = document.getElementById('idea-error-msg');
+          errDiv.textContent = 'Erreur de connexion. Veuillez réessayer.';
+          errDiv.classList.remove('hidden');
+          btn.disabled = false;
+          btnText.textContent = 'Envoyer mon idée';
+        }
+      });
     })();
   </script>
 </body>

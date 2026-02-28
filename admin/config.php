@@ -10,10 +10,10 @@ return [
     // Mot de passe admin (bcrypt — changer en production)
     // Générer un nouveau hash : password_hash('MonMotDePasse', PASSWORD_DEFAULT)
     'admin_password_hash' => getenv('ADMIN_PASSWORD_HASH')
-        ?: '$2y$12$ExempleHashBcryptAChangerAbsolumentEnProduction00000000',
+        ?: '$2y$12$jrLJ9j2XpkCIcbIEKqA9juE0OAP8Yq7zUIjJle0ThcoJOf2jax0eK',
 
     // Brevo
-    'brevo_api_key' => getenv('BREVO_API_KEY') ?: 'VOTRE_CLE_API_BREVO',
+    'brevo_api_key' => getenv('BREVO_API_KEY') ?: 'REMOVED_SECRET_KEY',
     'brevo_list_id' => (int)(getenv('BREVO_LIST_ID') ?: 2),
 
     // Données

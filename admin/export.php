@@ -3,7 +3,16 @@ require __DIR__ . '/auth.php';
 $config = require __DIR__ . '/config.php';
 
 $format = $_GET['format'] ?? 'csv';
-$csvFile = $config['subscriptions_file'];
+$type   = $_GET['type']   ?? 'subscriptions';
+
+// Déterminer le fichier source
+if ($type === 'ideas') {
+    $csvFile  = __DIR__ . '/../data/ideas.csv';
+    $filebase = 'idees_citoyennes_chateauneuf_';
+} else {
+    $csvFile  = $config['subscriptions_file'];
+    $filebase = 'inscriptions_chateauneuf_';
+}
 
 if (!file_exists($csvFile)) {
     header('Location: index.php?error=nofile');
@@ -17,7 +26,7 @@ while (($row = fgetcsv($handle)) !== false) {
 }
 fclose($handle);
 
-$filename = 'inscriptions_chateauneuf_' . date('Ymd_His');
+$filename = $filebase . date('Ymd_His');
 
 if ($format === 'excel') {
     // Export XLSX-compatible (CSV with BOM for Excel UTF-8 detection)

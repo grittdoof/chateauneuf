@@ -26,6 +26,23 @@ if (file_exists($csvFile)) {
 $count = count($subscriptions);
 // Inverser pour avoir les plus récentes en premier
 $subscriptions = array_reverse($subscriptions);
+
+// ── Lecture des idées citoyennes ─────────────────────────────────────────────
+$ideas = [];
+$ideasFile = __DIR__ . '/../data/ideas.csv';
+if (file_exists($ideasFile)) {
+    $handle = fopen($ideasFile, 'r');
+    $headers = fgetcsv($handle);
+    while (($row = fgetcsv($handle)) !== false) {
+        if ($headers && count($row) === count($headers)) {
+            $ideas[] = array_combine($headers, $row);
+        }
+    }
+    fclose($handle);
+}
+$ideasCount = count($ideas);
+$ideasUnread = count(array_filter($ideas, fn($i) => ($i['lu'] ?? '0') === '0'));
+$ideas = array_reverse($ideas);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -60,7 +77,7 @@ $subscriptions = array_reverse($subscriptions);
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
     <!-- Stats -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+    <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-8">
       <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
         <p class="text-sm text-gray-500 mb-1">Inscriptions totales</p>
         <p class="text-3xl font-bold text-blue-600"><?= $count ?></p>
@@ -70,14 +87,24 @@ $subscriptions = array_reverse($subscriptions);
         <p class="text-3xl font-bold text-green-600"><?= count(array_filter($subscriptions, fn($s) => isset($s['date']) && strtotime($s['date']) > strtotime('-7 days'))) ?></p>
       </div>
       <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+        <p class="text-sm text-gray-500 mb-1">Idées citoyennes</p>
+        <p class="text-3xl font-bold text-orange-600"><?= $ideasCount ?></p>
+        <?php if ($ideasUnread > 0): ?>
+        <p class="text-xs text-orange-500 mt-1 font-semibold"><?= $ideasUnread ?> non lue<?= $ideasUnread > 1 ? 's' : '' ?></p>
+        <?php endif; ?>
+      </div>
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
         <p class="text-sm text-gray-500 mb-1">Membres de l'équipe</p>
         <p class="text-3xl font-bold text-purple-600">17</p>
       </div>
     </div>
 
     <!-- Tabs -->
-    <div class="bg-gray-100 rounded-2xl p-1.5 mb-6 flex gap-1 max-w-sm">
+    <div class="bg-gray-100 rounded-2xl p-1.5 mb-6 flex gap-1 max-w-lg">
       <button onclick="showTab('inscriptions')" id="tab-inscriptions" class="tab-btn active flex-1 py-2 px-4 rounded-xl text-sm transition-all">Inscriptions</button>
+      <button onclick="showTab('idees')" id="tab-idees" class="tab-btn flex-1 py-2 px-4 rounded-xl text-sm text-gray-600 transition-all">
+        Idées<?php if ($ideasUnread > 0): ?> <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-orange-500 text-white text-[10px] font-bold ml-1"><?= $ideasUnread ?></span><?php endif; ?>
+      </button>
       <button onclick="showTab('equipe')" id="tab-equipe" class="tab-btn flex-1 py-2 px-4 rounded-xl text-sm text-gray-600 transition-all">L'équipe</button>
     </div>
 
@@ -135,6 +162,47 @@ $subscriptions = array_reverse($subscriptions);
       <?php endif; ?>
     </div>
 
+    <!-- Tab: Idées citoyennes -->
+    <div id="panel-idees" class="hidden">
+      <div class="flex flex-col sm:flex-row gap-3 justify-between items-start sm:items-center mb-5">
+        <h2 class="text-xl font-bold text-gray-800">Idées citoyennes (<?= $ideasCount ?>)</h2>
+        <a href="export.php?format=csv&type=ideas" class="inline-flex items-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-xl text-sm font-semibold hover:bg-orange-700 transition-colors shadow-sm">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Export CSV
+        </a>
+      </div>
+
+      <?php if (empty($ideas)): ?>
+      <div class="bg-white rounded-2xl border border-gray-100 p-16 text-center">
+        <p class="text-gray-400 text-lg">Aucune idée soumise pour le moment.</p>
+      </div>
+      <?php else: ?>
+      <div class="space-y-4">
+        <?php foreach ($ideas as $idea): ?>
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow <?= ($idea['lu'] ?? '0') === '0' ? 'border-l-4 border-l-orange-400' : '' ?>">
+          <div class="flex flex-col sm:flex-row sm:items-start gap-4">
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-2 flex-wrap">
+                <span class="inline-block px-2.5 py-0.5 bg-orange-100 text-orange-700 rounded-full text-xs font-semibold"><?= htmlspecialchars($idea['sujet'] ?? '') ?></span>
+                <?php if (($idea['lu'] ?? '0') === '0'): ?>
+                <span class="inline-block px-2 py-0.5 bg-red-100 text-red-600 rounded-full text-[10px] font-bold uppercase">Nouveau</span>
+                <?php endif; ?>
+                <span class="text-xs text-gray-400"><?= htmlspecialchars($idea['date'] ?? '') ?></span>
+              </div>
+              <p class="text-gray-800 text-sm leading-relaxed mb-3" style="white-space:pre-wrap;"><?= htmlspecialchars($idea['message'] ?? '') ?></p>
+              <div class="flex flex-wrap gap-4 text-xs text-gray-500">
+                <span><strong class="text-gray-700"><?= htmlspecialchars(($idea['prenom'] ?? '') . ' ' . ($idea['nom'] ?? '')) ?></strong></span>
+                <a href="mailto:<?= htmlspecialchars($idea['email'] ?? '') ?>" class="text-blue-600 hover:underline"><?= htmlspecialchars($idea['email'] ?? '') ?></a>
+                <span><?= htmlspecialchars($idea['telephone'] ?? '') ?></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <?php endforeach; ?>
+      </div>
+      <?php endif; ?>
+    </div>
+
     <!-- Tab: Équipe -->
     <div id="panel-equipe" class="hidden">
       <div class="flex justify-between items-center mb-5">
@@ -176,12 +244,11 @@ $subscriptions = array_reverse($subscriptions);
 
   <script>
     function showTab(tab) {
-      document.getElementById('panel-inscriptions').classList.toggle('hidden', tab !== 'inscriptions');
-      document.getElementById('panel-equipe').classList.toggle('hidden', tab !== 'equipe');
-      document.getElementById('tab-inscriptions').classList.toggle('active', tab === 'inscriptions');
-      document.getElementById('tab-equipe').classList.toggle('active', tab === 'equipe');
-      document.getElementById('tab-inscriptions').classList.toggle('text-gray-600', tab !== 'inscriptions');
-      document.getElementById('tab-equipe').classList.toggle('text-gray-600', tab !== 'equipe');
+      ['inscriptions', 'idees', 'equipe'].forEach(t => {
+        document.getElementById('panel-' + t).classList.toggle('hidden', tab !== t);
+        document.getElementById('tab-' + t).classList.toggle('active', tab === t);
+        document.getElementById('tab-' + t).classList.toggle('text-gray-600', tab !== t);
+      });
     }
   </script>
 </body>
