@@ -1,4 +1,5 @@
 # Données sensibles
+.env
 data/subscriptions.csv
 data/ideas.csv
 data/img-cache/

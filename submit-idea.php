@@ -24,9 +24,23 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+// Charger .env local s'il existe
+$envFile = __DIR__ . '/.env';
+if (file_exists($envFile)) {
+    foreach (file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
+        $line = trim($line);
+        if ($line === '' || $line[0] === '#') continue;
+        if (strpos($line, '=') !== false) {
+            [$key, $val] = array_map('trim', explode('=', $line, 2));
+            $val = trim($val, '"\'');
+            if (!getenv($key)) putenv("{$key}={$val}");
+        }
+    }
+}
+
 // ── Configuration ─────────────────────────────────────────────────────────────
 $config = [
-    'brevo_api_key'  => getenv('BREVO_API_KEY') ?: 'VOTRE_CLE_API_BREVO',
+    'brevo_api_key'  => getenv('BREVO_API_KEY') ?: '',
     'from_email'     => 'contact@entreprendre-chateauneuf.fr',
     'from_name'      => 'Entreprendre Ensemble pour Châteauneuf',
     'team_email'     => 'contact@entreprendre-chateauneuf.fr',

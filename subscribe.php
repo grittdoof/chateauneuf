@@ -25,13 +25,27 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 // ── Configuration ─────────────────────────────────────────────────────────────
+// Charger .env local s'il existe
+$envFile = __DIR__ . '/.env';
+if (file_exists($envFile)) {
+    foreach (file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
+        $line = trim($line);
+        if ($line === '' || $line[0] === '#') continue;
+        if (strpos($line, '=') !== false) {
+            [$key, $val] = array_map('trim', explode('=', $line, 2));
+            $val = trim($val, '"\'');
+            if (!getenv($key)) putenv("{$key}={$val}");
+        }
+    }
+}
+
 $config = [
-    'brevo_api_key'  => getenv('BREVO_API_KEY') ?: 'VOTRE_CLE_API_BREVO',
-    'brevo_list_id'  => (int)(getenv('BREVO_LIST_ID') ?: 2),       // ID de la liste Brevo
+    'brevo_api_key'  => getenv('BREVO_API_KEY') ?: '',
+    'brevo_list_id'  => (int)(getenv('BREVO_LIST_ID') ?: 2),
     'smtp_host'      => 'smtp-relay.brevo.com',
     'smtp_port'      => 587,
-    'smtp_user'      => getenv('BREVO_SMTP_USER') ?: 'VOTRE_LOGIN_SMTP_BREVO',
-    'smtp_pass'      => getenv('BREVO_SMTP_PASS') ?: 'VOTRE_MOT_DE_PASSE_SMTP_BREVO',
+    'smtp_user'      => getenv('BREVO_SMTP_USER') ?: '',
+    'smtp_pass'      => getenv('BREVO_SMTP_PASS') ?: '',
     'from_email'     => 'contact@entreprendre-chateauneuf.fr',
     'from_name'      => 'Entreprendre Ensemble pour Châteauneuf',
     'data_file'      => __DIR__ . '/data/subscriptions.csv',
