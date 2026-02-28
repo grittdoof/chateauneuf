@@ -2,5 +2,9 @@
   "name": "chateauneuf",
   "version": "1.0.0",
   "private": true,
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "nodemailer": "^6.9.0",
+    "bcryptjs": "^2.4.3"
+  }
 }

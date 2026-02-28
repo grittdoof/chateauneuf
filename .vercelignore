@@ -1,0 +1,15 @@
+# Ignorer les fichiers PHP (non supportés par Vercel)
+subscribe.php
+submit-idea.php
+admin/index.php
+admin/login.php
+admin/auth.php
+admin/config.php
+admin/edit-team.php
+admin/export.php
+imgopt.php
+
+# Fichiers dev
+.env
+.env.example
+.DS_Store

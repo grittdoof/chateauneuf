@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Entreprendre Ensemble</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .tab-btn.active { background: white; box-shadow: 0 1px 4px rgba(0,0,0,0.1); color: #1d4ed8; font-weight: 700; }
+    .loader { display: inline-block; width: 20px; height: 20px; border: 2px solid #e5e7eb; border-top-color: #3b82f6; border-radius: 50%; animation: spin .6s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+  <!-- ═══ ECRAN LOGIN ═══ -->
+  <div id="login-screen" class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
+      <div class="text-center mb-8">
+        <img src="../images/logo.png" alt="Châteauneuf" class="h-16 mx-auto mb-4">
+        <h1 class="text-2xl font-bold text-gray-800">Administration</h1>
+        <p class="text-gray-500 text-sm mt-1">Entreprendre Ensemble pour Châteauneuf</p>
+      </div>
+      <div id="login-error" class="bg-red-50 border border-red-200 text-red-700 rounded-xl p-4 mb-6 text-sm hidden"></div>
+      <form id="login-form">
+        <div class="mb-6">
+          <label class="block text-sm font-semibold text-gray-700 mb-2" for="password">Mot de passe</label>
+          <input type="password" id="password" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-colors" placeholder="••••••••" autofocus required>
+        </div>
+        <button type="submit" id="login-btn" class="w-full py-3 px-6 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5">
+          Se connecter
+        </button>
+      </form>
+      <p class="text-center text-gray-400 text-xs mt-6">
+        <a href="../index.html" class="hover:text-blue-500 transition-colors">← Retour au site</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- ═══ ECRAN ADMIN ═══ -->
+  <div id="admin-screen" class="hidden">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-10">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <img src="../images/logo.png" alt="Logo" class="h-10">
+          <div>
+            <p class="font-bold text-gray-800 leading-none">Administration</p>
+            <p class="text-xs text-gray-500">Entreprendre Ensemble pour Châteauneuf</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <a href="../index.html" target="_blank" class="text-sm text-blue-600 hover:underline">Voir le site →</a>
+          <button onclick="logout()" class="text-sm text-red-600 hover:underline">Déconnexion</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+      <!-- Stats -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+          <p class="text-sm text-gray-500 mb-1">Inscriptions</p>
+          <p class="text-3xl font-bold text-blue-600" id="stat-inscriptions">—</p>
+        </div>
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+          <p class="text-sm text-gray-500 mb-1">Idées citoyennes</p>
+          <p class="text-3xl font-bold text-orange-600">via email</p>
+          <p class="text-xs text-gray-400 mt-1">Reçues dans votre boîte mail</p>
+        </div>
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+          <p class="text-sm text-gray-500 mb-1">Membres de l'équipe</p>
+          <p class="text-3xl font-bold text-purple-600" id="stat-equipe">—</p>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="bg-gray-100 rounded-2xl p-1.5 mb-6 flex gap-1 max-w-lg">
+        <button onclick="showTab('inscriptions')" id="tab-inscriptions" class="tab-btn active flex-1 py-2 px-4 rounded-xl text-sm transition-all">Inscriptions</button>
+        <button onclick="showTab('idees')" id="tab-idees" class="tab-btn flex-1 py-2 px-4 rounded-xl text-sm text-gray-600 transition-all">Idées</button>
+        <button onclick="showTab('equipe')" id="tab-equipe" class="tab-btn flex-1 py-2 px-4 rounded-xl text-sm text-gray-600 transition-all">L'équipe</button>
+      </div>
+
+      <!-- Tab: Inscriptions -->
+      <div id="panel-inscriptions">
+        <div class="flex flex-col sm:flex-row gap-3 justify-between items-start sm:items-center mb-5">
+          <h2 class="text-xl font-bold text-gray-800">Liste des inscrits</h2>
+          <a href="https://app.brevo.com/contact/list" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-xl text-sm font-semibold hover:bg-green-700 transition-colors shadow-sm">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            Gérer dans Brevo
+          </a>
+        </div>
+        <div id="contacts-loading" class="bg-white rounded-2xl border border-gray-100 p-16 text-center">
+          <div class="loader mx-auto mb-4"></div>
+          <p class="text-gray-400">Chargement des contacts…</p>
+        </div>
+        <div id="contacts-message" class="bg-white rounded-2xl border border-gray-100 p-16 text-center hidden">
+          <p class="text-gray-400 text-lg" id="contacts-message-text"></p>
+        </div>
+        <div id="contacts-table-wrap" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead class="bg-gray-50 border-b border-gray-200">
+                <tr>
+                  <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Prénom</th>
+                  <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Nom</th>
+                  <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Email</th>
+                  <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Téléphone</th>
+                  <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Date</th>
+                </tr>
+              </thead>
+              <tbody id="contacts-tbody" class="divide-y divide-gray-100"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Idées -->
+      <div id="panel-idees" class="hidden">
+        <h2 class="text-xl font-bold text-gray-800 mb-5">Idées citoyennes</h2>
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
+          <div class="text-center max-w-md mx-auto">
+            <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800 mb-2">Idées reçues par email</h3>
+            <p class="text-gray-500 text-sm leading-relaxed mb-4">
+              Les idées citoyennes soumises via le site sont envoyées directement par email à l'équipe. Consultez votre boîte mail pour les lire et y répondre.
+            </p>
+            <div class="bg-gray-50 rounded-xl p-4 text-left text-sm text-gray-600">
+              <p class="font-semibold text-gray-700 mb-2">📬 Destinataires configurés :</p>
+              <p class="text-blue-600" id="email-to-display">Chargement…</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Équipe -->
+      <div id="panel-equipe" class="hidden">
+        <div class="flex justify-between items-center mb-5">
+          <h2 class="text-xl font-bold text-gray-800">Membres de l'équipe</h2>
+        </div>
+        <div id="team-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    // ═══════════════════════════════════════════════════════════════════════════
+    // STATE
+    // ═══════════════════════════════════════════════════════════════════════════
+    let authToken = localStorage.getItem('admin_token') || '';
+    let tokenExpiry = parseInt(localStorage.getItem('admin_token_expiry') || '0', 10);
+
+    // Vérifier si le token est encore valide
+    if (authToken && tokenExpiry > Math.floor(Date.now() / 1000)) {
+      showAdmin();
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // LOGIN
+    // ═══════════════════════════════════════════════════════════════════════════
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const password = document.getElementById('password').value;
+      const btn = document.getElementById('login-btn');
+      const errDiv = document.getElementById('login-error');
+      errDiv.classList.add('hidden');
+      btn.disabled = true;
+      btn.textContent = 'Connexion…';
+
+      try {
+        const resp = await fetch('/api/admin-login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password }),
+        });
+        const data = await resp.json();
+
+        if (data.success) {
+          authToken = data.token;
+          tokenExpiry = Math.floor(Date.now() / 1000) + data.expiresIn;
+          localStorage.setItem('admin_token', authToken);
+          localStorage.setItem('admin_token_expiry', String(tokenExpiry));
+          showAdmin();
+        } else {
+          errDiv.textContent = data.message || 'Mot de passe incorrect.';
+          errDiv.classList.remove('hidden');
+        }
+      } catch {
+        errDiv.textContent = 'Erreur de connexion au serveur.';
+        errDiv.classList.remove('hidden');
+      }
+
+      btn.disabled = false;
+      btn.textContent = 'Se connecter';
+    });
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // ADMIN DASHBOARD
+    // ═══════════════════════════════════════════════════════════════════════════
+    function showAdmin() {
+      document.getElementById('login-screen').classList.add('hidden');
+      document.getElementById('admin-screen').classList.remove('hidden');
+      loadContacts();
+      loadTeam();
+    }
+
+    function logout() {
+      authToken = '';
+      tokenExpiry = 0;
+      localStorage.removeItem('admin_token');
+      localStorage.removeItem('admin_token_expiry');
+      document.getElementById('admin-screen').classList.add('hidden');
+      document.getElementById('login-screen').classList.remove('hidden');
+      document.getElementById('password').value = '';
+    }
+
+    function showTab(tab) {
+      ['inscriptions', 'idees', 'equipe'].forEach(t => {
+        document.getElementById('panel-' + t).classList.toggle('hidden', tab !== t);
+        document.getElementById('tab-' + t).classList.toggle('active', tab === t);
+        document.getElementById('tab-' + t).classList.toggle('text-gray-600', tab !== t);
+      });
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // CONTACTS
+    // ═══════════════════════════════════════════════════════════════════════════
+    async function loadContacts() {
+      const loading = document.getElementById('contacts-loading');
+      const msgDiv = document.getElementById('contacts-message');
+      const msgText = document.getElementById('contacts-message-text');
+      const tableWrap = document.getElementById('contacts-table-wrap');
+      const tbody = document.getElementById('contacts-tbody');
+
+      try {
+        const resp = await fetch('/api/admin-contacts', {
+          headers: { 'Authorization': 'Bearer ' + authToken },
+        });
+
+        if (resp.status === 401) { logout(); return; }
+        const data = await resp.json();
+
+        loading.classList.add('hidden');
+
+        if (data.message && (!data.contacts || data.contacts.length === 0)) {
+          msgText.textContent = data.message;
+          msgDiv.classList.remove('hidden');
+          document.getElementById('stat-inscriptions').textContent = '—';
+          return;
+        }
+
+        const contacts = data.contacts || [];
+        document.getElementById('stat-inscriptions').textContent = data.total || contacts.length;
+
+        if (contacts.length === 0) {
+          msgText.textContent = 'Aucune inscription pour le moment.';
+          msgDiv.classList.remove('hidden');
+          return;
+        }
+
+        tbody.innerHTML = contacts.map(c => `
+          <tr class="hover:bg-gray-50 transition-colors">
+            <td class="px-4 py-3 font-medium text-gray-800">${esc(c.prenom)}</td>
+            <td class="px-4 py-3 text-gray-700">${esc(c.nom)}</td>
+            <td class="px-4 py-3 text-blue-600"><a href="mailto:${esc(c.email)}" class="hover:underline">${esc(c.email)}</a></td>
+            <td class="px-4 py-3 text-gray-600">${esc(c.telephone)}</td>
+            <td class="px-4 py-3 text-gray-500 text-xs">${formatDate(c.date)}</td>
+          </tr>
+        `).join('');
+
+        tableWrap.classList.remove('hidden');
+
+      } catch {
+        loading.classList.add('hidden');
+        msgText.textContent = 'Erreur de chargement des contacts.';
+        msgDiv.classList.remove('hidden');
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // TEAM
+    // ═══════════════════════════════════════════════════════════════════════════
+    async function loadTeam() {
+      try {
+        const resp = await fetch('../data/team.json');
+        const data = await resp.json();
+        const members = data.members || [];
+
+        document.getElementById('stat-equipe').textContent = members.length;
+
+        document.getElementById('team-grid').innerHTML = members.map(m => `
+          <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+            <div class="h-32 bg-gray-100 overflow-hidden">
+              <img src="../${esc(m.photo)}" alt="${esc(m.prenom + ' ' + m.nom)}" class="w-full h-full object-cover object-top" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23e5e7eb%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2255%22 text-anchor=%22middle%22 fill=%22%239ca3af%22 font-size=%2230%22>${m.prenom[0]}${m.nom[0]}</text></svg>'">
+            </div>
+            <div class="p-3">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="w-5 h-5 rounded-full bg-orange-100 text-orange-700 text-xs font-bold flex items-center justify-center flex-shrink-0">${m.id}</span>
+                <p class="font-semibold text-gray-800 text-sm leading-tight">${esc(m.prenom)} ${esc(m.nom)}</p>
+              </div>
+              ${m.age ? `<p class="text-xs text-gray-500">${m.age} ans</p>` : ''}
+              ${m.profession ? `<p class="text-xs text-blue-600 font-medium truncate mt-0.5">${esc(m.profession)}</p>` : ''}
+              ${m.role ? `<p class="text-xs text-orange-600 font-bold mt-0.5">${esc(m.role)}</p>` : ''}
+            </div>
+          </div>
+        `).join('');
+
+      } catch {
+        document.getElementById('team-grid').innerHTML = '<p class="text-gray-400 col-span-full text-center py-8">Erreur de chargement de l\'équipe.</p>';
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // HELPERS
+    // ═══════════════════════════════════════════════════════════════════════════
+    function esc(str) {
+      if (!str) return '';
+      const d = document.createElement('div');
+      d.textContent = str;
+      return d.innerHTML;
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '';
+      try {
+        const d = new Date(dateStr);
+        return d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      } catch {
+        return dateStr;
+      }
+    }
+  </script>
+</body>
+</html>

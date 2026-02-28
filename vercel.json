@@ -2,16 +2,28 @@
   "buildCommand": null,
   "outputDirectory": null,
   "rewrites": [
-    { "source": "/api/subscribe", "destination": "/api/subscribe" },
-    { "source": "/api/submit-idea", "destination": "/api/submit-idea" }
+    { "source": "/admin", "destination": "/admin/index.html" },
+    { "source": "/admin/", "destination": "/admin/index.html" }
+  ],
+  "redirects": [
+    { "source": "/admin/index.php", "destination": "/admin/", "statusCode": 301 },
+    { "source": "/admin/login.php", "destination": "/admin/", "statusCode": 301 },
+    { "source": "/subscribe.php", "destination": "/", "statusCode": 301 },
+    { "source": "/submit-idea.php", "destination": "/", "statusCode": 301 }
   ],
   "headers": [
     {
       "source": "/api/(.*)",
       "headers": [
         { "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Access-Control-Allow-Methods", "value": "POST, OPTIONS" },
-        { "key": "Access-Control-Allow-Headers", "value": "Content-Type" }
+        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization" }
+      ]
+    },
+    {
+      "source": "/(.*)\\.php",
+      "headers": [
+        { "key": "Content-Type", "value": "text/html" }
       ]
     }
   ]
