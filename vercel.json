@@ -1,0 +1,18 @@
+{
+  "buildCommand": null,
+  "outputDirectory": null,
+  "rewrites": [
+    { "source": "/api/subscribe", "destination": "/api/subscribe" },
+    { "source": "/api/submit-idea", "destination": "/api/submit-idea" }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "POST, OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type" }
+      ]
+    }
+  ]
+}

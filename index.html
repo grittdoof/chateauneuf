@@ -1259,7 +1259,7 @@
       btnText.textContent = 'Envoi en cours…';
 
       try {
-        const resp = await fetch('subscribe.php', {
+        const resp = await fetch('/api/subscribe', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ prenom, nom, email, telephone })
@@ -1396,7 +1396,7 @@
         btnText.textContent = 'Envoi en cours…';
 
         try {
-          const resp = await fetch('submit-idea.php', {
+          const resp = await fetch('/api/submit-idea', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ prenom, nom, email, telephone, sujet, message })
