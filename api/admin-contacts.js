@@ -1,9 +1,10 @@
 /**
  * api/admin-contacts.js
- * Vercel Serverless Function — Récupérer les contacts Brevo pour l'admin
+ * Vercel Serverless Function — Récupérer les inscriptions depuis Supabase
  */
 
 import { verifyToken } from './admin-login.js';
+import { getSupabase } from './_supabase.js';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -22,58 +23,34 @@ export default async function handler(req, res) {
     return res.status(401).json({ success: false, message: 'Non autorisé.' });
   }
 
-  const apiKey = process.env.BREVO_API_KEY;
-  if (!apiKey) {
-    return res.status(200).json({
-      success: true,
-      contacts: [],
-      message: 'BREVO_API_KEY non configurée. Les contacts sont gérés directement dans Brevo.',
-    });
-  }
-
-  const listId = parseInt(process.env.BREVO_LIST_ID || '2', 10);
-
   try {
-    // Récupérer les contacts de la liste
-    const resp = await fetch(
-      `https://api.brevo.com/v3/contacts/lists/${listId}/contacts?limit=500&offset=0`,
-      {
-        headers: {
-          'Accept': 'application/json',
-          'api-key': apiKey,
-        },
-      }
-    );
+    const supabase = getSupabase();
+    const { data, error, count } = await supabase
+      .from('subscriptions')
+      .select('*', { count: 'exact' })
+      .order('created_at', { ascending: false });
 
-    if (!resp.ok) {
-      return res.status(200).json({
-        success: true,
-        contacts: [],
-        message: `Erreur Brevo (${resp.status}). Vérifiez votre BREVO_API_KEY et BREVO_LIST_ID.`,
-      });
-    }
+    if (error) throw error;
 
-    const data = await resp.json();
-    const contacts = (data.contacts || []).map(c => ({
+    const contacts = (data || []).map(c => ({
+      id: c.id,
+      prenom: c.prenom,
+      nom: c.nom,
       email: c.email,
-      prenom: c.attributes?.PRENOM || '',
-      nom: c.attributes?.NOM || '',
-      telephone: c.attributes?.SMS || '',
-      date: c.createdAt || '',
+      telephone: c.telephone,
+      date: c.created_at,
     }));
-
-    // Trier par date (plus récents en premier)
-    contacts.sort((a, b) => new Date(b.date) - new Date(a.date));
 
     return res.status(200).json({
       success: true,
       contacts,
-      total: data.count || contacts.length,
+      total: count || contacts.length,
     });
   } catch (err) {
+    console.error('[ADMIN CONTACTS ERROR]', err.message);
     return res.status(500).json({
       success: false,
-      message: 'Erreur lors de la récupération des contacts.',
+      message: 'Erreur lors de la récupération des inscriptions.',
     });
   }
 }

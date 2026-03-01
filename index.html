@@ -720,57 +720,7 @@
 
       <div class="quotes-wrapper">
         <div id="quotes-track" style="display:flex;gap:1.5rem;width:max-content;will-change:transform;">
-          <!-- 5 citations — dupliquées par JS pour la boucle infinie -->
-          <div class="quote-card">
-            <div class="bg-white rounded-2xl p-7 shadow-lg border border-gray-100 h-full">
-              <div class="text-5xl font-serif leading-none mb-4" style="color:#33C1EB">"</div>
-              <p class="text-gray-700 text-base leading-relaxed mb-6 italic">Je souhaite faire de Châteauneuf une commune sereine et facile à vivre, du bourg jusqu'aux petits coins les plus reculés.</p>
-              <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
-                <img src="images/equipe/Laure Lamour.jpg" alt="Laure Lamour" class="w-12 h-12 rounded-full object-cover object-top" loading="lazy">
-                <div><p class="font-bold text-gray-800">Laure Lamour</p><p class="text-xs text-gray-500">Assistante audioprothésiste</p></div>
-              </div>
-            </div>
-          </div>
-          <div class="quote-card">
-            <div class="bg-white rounded-2xl p-7 shadow-lg border border-gray-100 h-full">
-              <div class="text-5xl font-serif leading-none mb-4" style="color:#F79F87">"</div>
-              <p class="text-gray-700 text-base leading-relaxed mb-6 italic">Une commune pensée pour les enfants est une commune plus sûre, plus solidaire, plus durable et donc plus agréable pour tous.</p>
-              <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
-                <img src="images/equipe/Azeline Cornut.jpg" alt="Azeline Cornut" class="w-12 h-12 rounded-full object-cover object-top" loading="lazy">
-                <div><p class="font-bold text-gray-800">Azeline Cornut</p><p class="text-xs text-gray-500">Éclairagiste de théâtre</p></div>
-              </div>
-            </div>
-          </div>
-          <div class="quote-card">
-            <div class="bg-white rounded-2xl p-7 shadow-lg border border-gray-100 h-full">
-              <div class="text-5xl font-serif leading-none mb-4" style="color:#A7BF6F">"</div>
-              <p class="text-gray-700 text-base leading-relaxed mb-6 italic">Mon engagement repose sur l'écoute, la proximité et l'action, au service de tous les habitants de Châteauneuf.</p>
-              <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
-                <img src="images/equipe/Melissa Artus.jpg" alt="Melissa Artus" class="w-12 h-12 rounded-full object-cover object-top" loading="lazy">
-                <div><p class="font-bold text-gray-800">Melissa Artus</p><p class="text-xs text-gray-500">Coiffeuse, gérante A'Melisse</p></div>
-              </div>
-            </div>
-          </div>
-          <div class="quote-card">
-            <div class="bg-white rounded-2xl p-7 shadow-lg border border-gray-100 h-full">
-              <div class="text-5xl font-serif leading-none mb-4" style="color:#33C1EB">"</div>
-              <p class="text-gray-700 text-base leading-relaxed mb-6 italic">Je souhaite apporter un nouveau dynamisme à la commune — être aux côtés des habitants pour montrer que la municipalité peut être à leur écoute.</p>
-              <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
-                <img src="images/equipe/Annabelle Briand.jpg" alt="Annabelle Briand" class="w-12 h-12 rounded-full object-cover object-top" loading="lazy">
-                <div><p class="font-bold text-gray-800">Annabelle Briand</p><p class="text-xs text-gray-500">Assistante comptable</p></div>
-              </div>
-            </div>
-          </div>
-          <div class="quote-card">
-            <div class="bg-white rounded-2xl p-7 shadow-lg border border-gray-100 h-full">
-              <div class="text-5xl font-serif leading-none mb-4" style="color:#F79F87">"</div>
-              <p class="text-gray-700 text-base leading-relaxed mb-6 italic">Je souhaite participer activement à la vie locale plutôt que rester simple observateur. Proximité, écoute, bon sens et esprit collectif.</p>
-              <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
-                <img src="images/equipe/Aurélien Bonnin.jpg" alt="Aurélien Bonnin" class="w-12 h-12 rounded-full object-cover object-top" loading="lazy">
-                <div><p class="font-bold text-gray-800">Aurélien Bonnin</p><p class="text-xs text-gray-500">Électricien</p></div>
-              </div>
-            </div>
-          </div>
+          <!-- Chargé dynamiquement depuis Supabase via /api/testimonials -->
         </div>
       </div>
     </div>
@@ -1223,11 +1173,16 @@
       revealOnScroll();
     }
 
-    // Load team data and render — fetch (server) avec fallback inline (file://)
-    fetch('data/team.json')
+    // Load team data — API Supabase → fichier statique → fallback inline
+    fetch('/api/team')
       .then(res => { if (!res.ok) throw new Error(); return res.json(); })
-      .then(data => renderTeam(data))
-      .catch(() => renderTeam(TEAM_FALLBACK));
+      .then(data => renderTeam({ members: data.members }))
+      .catch(() => {
+        fetch('data/team.json')
+          .then(res => { if (!res.ok) throw new Error(); return res.json(); })
+          .then(data => renderTeam(data))
+          .catch(() => renderTeam(TEAM_FALLBACK));
+      });
 
     // ============ OPTIN FORM ============
     const optinForm = document.getElementById('optin-form');
@@ -1285,28 +1240,58 @@
       }
     });
 
-    // ============ QUOTES CAROUSEL — JS requestAnimationFrame + Arrows ============
-    (function initCarousel() {
+    // ============ QUOTES CAROUSEL — Chargement dynamique + Arrows ============
+    (async function() {
       const track = document.getElementById('quotes-track');
       if (!track) return;
 
-      // Dupliquer les 5 cartes pour avoir une boucle sans saut
-      const origCards = track.innerHTML;
-      track.innerHTML += origCards;
+      // Fallback inline (si l'API est indisponible)
+      const FALLBACK = [
+        { name: "Laure Lamour", profession: "Assistante audioprothésiste", quote: "Je souhaite faire de Châteauneuf une commune sereine et facile à vivre, du bourg jusqu'aux petits coins les plus reculés.", photo: "images/equipe/Laure Lamour.jpg", color: "#33C1EB" },
+        { name: "Azeline Cornut", profession: "Éclairagiste de théâtre", quote: "Une commune pensée pour les enfants est une commune plus sûre, plus solidaire, plus durable et donc plus agréable pour tous.", photo: "images/equipe/Azeline Cornut.jpg", color: "#F79F87" },
+        { name: "Melissa Artus", profession: "Coiffeuse, gérante A'Melisse", quote: "Mon engagement repose sur l'écoute, la proximité et l'action, au service de tous les habitants de Châteauneuf.", photo: "images/equipe/Melissa Artus.jpg", color: "#A7BF6F" },
+        { name: "Annabelle Briand", profession: "Assistante comptable", quote: "Je souhaite apporter un nouveau dynamisme à la commune — être aux côtés des habitants pour montrer que la municipalité peut être à leur écoute.", photo: "images/equipe/Annabelle Briand.jpg", color: "#33C1EB" },
+        { name: "Aurélien Bonnin", profession: "Électricien", quote: "Je souhaite participer activement à la vie locale plutôt que rester simple observateur. Proximité, écoute, bon sens et esprit collectif.", photo: "images/equipe/Aurélien Bonnin.jpg", color: "#F79F87" }
+      ];
 
+      function escQuote(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+      // Charger depuis l'API, fallback inline
+      let testimonials;
+      try {
+        const resp = await fetch('/api/testimonials');
+        const data = await resp.json();
+        testimonials = data.testimonials && data.testimonials.length > 0 ? data.testimonials : FALLBACK;
+      } catch { testimonials = FALLBACK; }
+
+      // Générer les cards
+      const html = testimonials.map(t => `
+        <div class="quote-card">
+          <div class="bg-white rounded-2xl p-7 shadow-lg border border-gray-100 h-full">
+            <div class="text-5xl font-serif leading-none mb-4" style="color:${escQuote(t.color)}">\u201C</div>
+            <p class="text-gray-700 text-base leading-relaxed mb-6 italic">${escQuote(t.quote)}</p>
+            <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
+              <img src="${escQuote(t.photo)}" alt="${escQuote(t.name)}" class="w-12 h-12 rounded-full object-cover object-top" loading="lazy">
+              <div><p class="font-bold text-gray-800">${escQuote(t.name)}</p><p class="text-xs text-gray-500">${escQuote(t.profession)}</p></div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      // Dupliquer pour boucle infinie
+      track.innerHTML = html + html;
+
+      // Init carousel animation
       let pos = 0;
-      const speed = 0.5; // pixels par frame (~30px/s à 60fps)
+      const speed = 0.5;
       let paused = false;
-      let rafId;
-      const cardWidth = 380 + 24; // quote-card width + gap (1.5rem)
+      const cardWidth = 380 + 24;
 
       track.addEventListener('mouseenter', () => { paused = true; });
       track.addEventListener('mouseleave', () => { paused = false; });
-      // Touch support
       track.addEventListener('touchstart', () => { paused = true; }, { passive: true });
       track.addEventListener('touchend', () => { paused = false; });
 
-      // Arrow navigation
       const prevBtn = document.getElementById('carousel-prev');
       const nextBtn = document.getElementById('carousel-next');
 
@@ -1325,11 +1310,8 @@
           if (pos < 0) pos += halfWidth;
           if (pos >= halfWidth) pos -= halfWidth;
           track.style.transform = 'translateX(' + (-pos) + 'px)';
-          if (t < 1) {
-            requestAnimationFrame(animate);
-          } else {
-            paused = false;
-          }
+          if (t < 1) requestAnimationFrame(animate);
+          else paused = false;
         }
         requestAnimationFrame(animate);
       }
@@ -1340,14 +1322,13 @@
       function step() {
         if (!paused) {
           pos += speed;
-          // Quand on a défilé la moitié (les 5 originaux), retour à 0
           const halfWidth = track.scrollWidth / 2;
           if (pos >= halfWidth) pos = 0;
           track.style.transform = 'translateX(' + (-pos) + 'px)';
         }
-        rafId = requestAnimationFrame(step);
+        requestAnimationFrame(step);
       }
-      rafId = requestAnimationFrame(step);
+      requestAnimationFrame(step);
     })();
 
     // ============ IDÉE FORM ============

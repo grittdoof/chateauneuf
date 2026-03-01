@@ -62,13 +62,13 @@
       <!-- Stats -->
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-          <p class="text-sm text-gray-500 mb-1">Inscriptions</p>
+          <p class="text-sm text-gray-500 mb-1">Inscriptions totales</p>
           <p class="text-3xl font-bold text-blue-600" id="stat-inscriptions">—</p>
         </div>
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
           <p class="text-sm text-gray-500 mb-1">Idées citoyennes</p>
-          <p class="text-3xl font-bold text-orange-600">via email</p>
-          <p class="text-xs text-gray-400 mt-1">Reçues dans votre boîte mail</p>
+          <p class="text-3xl font-bold text-orange-600" id="stat-idees">—</p>
+          <p class="text-xs text-orange-500 mt-1 font-semibold hidden" id="stat-idees-unread"></p>
         </div>
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
           <p class="text-sm text-gray-500 mb-1">Membres de l'équipe</p>
@@ -79,22 +79,32 @@
       <!-- Tabs -->
       <div class="bg-gray-100 rounded-2xl p-1.5 mb-6 flex gap-1 max-w-lg">
         <button onclick="showTab('inscriptions')" id="tab-inscriptions" class="tab-btn active flex-1 py-2 px-4 rounded-xl text-sm transition-all">Inscriptions</button>
-        <button onclick="showTab('idees')" id="tab-idees" class="tab-btn flex-1 py-2 px-4 rounded-xl text-sm text-gray-600 transition-all">Idées</button>
+        <button onclick="showTab('idees')" id="tab-idees" class="tab-btn flex-1 py-2 px-4 rounded-xl text-sm text-gray-600 transition-all relative">
+          Idées
+          <span id="tab-idees-badge" class="hidden absolute -top-1 -right-1 w-5 h-5 rounded-full bg-orange-500 text-white text-[10px] font-bold flex items-center justify-center"></span>
+        </button>
         <button onclick="showTab('equipe')" id="tab-equipe" class="tab-btn flex-1 py-2 px-4 rounded-xl text-sm text-gray-600 transition-all">L'équipe</button>
       </div>
 
-      <!-- Tab: Inscriptions -->
+      <!-- ═══ Tab: Inscriptions ═══ -->
       <div id="panel-inscriptions">
         <div class="flex flex-col sm:flex-row gap-3 justify-between items-start sm:items-center mb-5">
           <h2 class="text-xl font-bold text-gray-800">Liste des inscrits</h2>
-          <a href="https://app.brevo.com/contact/list" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-xl text-sm font-semibold hover:bg-green-700 transition-colors shadow-sm">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-            Gérer dans Brevo
-          </a>
+          <div class="flex gap-2">
+            <button onclick="exportData('subscriptions','csv')" class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-xl text-sm font-semibold hover:bg-green-700 transition-colors shadow-sm">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              CSV
+            </button>
+            <button onclick="exportData('subscriptions','excel')" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition-colors shadow-sm">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              Excel
+            </button>
+          </div>
         </div>
+
         <div id="contacts-loading" class="bg-white rounded-2xl border border-gray-100 p-16 text-center">
           <div class="loader mx-auto mb-4"></div>
-          <p class="text-gray-400">Chargement des contacts…</p>
+          <p class="text-gray-400">Chargement des inscriptions…</p>
         </div>
         <div id="contacts-message" class="bg-white rounded-2xl border border-gray-100 p-16 text-center hidden">
           <p class="text-gray-400 text-lg" id="contacts-message-text"></p>
@@ -117,27 +127,44 @@
         </div>
       </div>
 
-      <!-- Tab: Idées -->
+      <!-- ═══ Tab: Idées ═══ -->
       <div id="panel-idees" class="hidden">
-        <h2 class="text-xl font-bold text-gray-800 mb-5">Idées citoyennes</h2>
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
-          <div class="text-center max-w-md mx-auto">
-            <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg class="w-8 h-8 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-            </div>
-            <h3 class="text-lg font-bold text-gray-800 mb-2">Idées reçues par email</h3>
-            <p class="text-gray-500 text-sm leading-relaxed mb-4">
-              Les idées citoyennes soumises via le site sont envoyées directement par email à l'équipe. Consultez votre boîte mail pour les lire et y répondre.
-            </p>
-            <div class="bg-gray-50 rounded-xl p-4 text-left text-sm text-gray-600">
-              <p class="font-semibold text-gray-700 mb-2">📬 Destinataires configurés :</p>
-              <p class="text-blue-600" id="email-to-display">Chargement…</p>
-            </div>
+        <div class="flex flex-col sm:flex-row gap-3 justify-between items-start sm:items-center mb-5">
+          <h2 class="text-xl font-bold text-gray-800">Idées citoyennes</h2>
+          <div class="flex gap-2 flex-wrap">
+            <select id="ideas-filter-sujet" onchange="renderIdeas()" class="px-3 py-2 border border-gray-200 rounded-xl text-sm focus:border-blue-500 focus:outline-none">
+              <option value="">Tous les sujets</option>
+              <option>Urbanisme & cadre de vie</option>
+              <option>École & petite enfance</option>
+              <option>Sécurité & voirie</option>
+              <option>Loisirs & jeunesse</option>
+              <option>Environnement & développement durable</option>
+              <option>Solidarité & bien-être</option>
+              <option>Commerce & artisanat</option>
+              <option>Économie locale</option>
+              <option>Autre</option>
+            </select>
+            <label class="inline-flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-xl text-sm cursor-pointer">
+              <input type="checkbox" id="ideas-filter-unread" onchange="renderIdeas()" class="rounded text-orange-500">
+              Non lues
+            </label>
+            <button onclick="markAllRead()" class="px-3 py-2 bg-gray-100 text-gray-600 rounded-xl text-sm hover:bg-gray-200 transition-colors">Tout marquer lu</button>
+            <button onclick="exportData('ideas','csv')" class="px-3 py-2 bg-orange-600 text-white rounded-xl text-sm font-semibold hover:bg-orange-700 transition-colors">Export CSV</button>
+            <button onclick="exportData('ideas','excel')" class="px-3 py-2 bg-orange-700 text-white rounded-xl text-sm font-semibold hover:bg-orange-800 transition-colors">Export Excel</button>
           </div>
         </div>
+
+        <div id="ideas-loading" class="bg-white rounded-2xl border border-gray-100 p-16 text-center">
+          <div class="loader mx-auto mb-4"></div>
+          <p class="text-gray-400">Chargement des idées…</p>
+        </div>
+        <div id="ideas-empty" class="bg-white rounded-2xl border border-gray-100 p-16 text-center hidden">
+          <p class="text-gray-400 text-lg">Aucune idée soumise pour le moment.</p>
+        </div>
+        <div id="ideas-list" class="space-y-4 hidden"></div>
       </div>
 
-      <!-- Tab: Équipe -->
+      <!-- ═══ Tab: Équipe ═══ -->
       <div id="panel-equipe" class="hidden">
         <div class="flex justify-between items-center mb-5">
           <h2 class="text-xl font-bold text-gray-800">Membres de l'équipe</h2>
@@ -154,8 +181,8 @@
     // ═══════════════════════════════════════════════════════════════════════════
     let authToken = localStorage.getItem('admin_token') || '';
     let tokenExpiry = parseInt(localStorage.getItem('admin_token_expiry') || '0', 10);
+    let allIdeas = [];
 
-    // Vérifier si le token est encore valide
     if (authToken && tokenExpiry > Math.floor(Date.now() / 1000)) {
       showAdmin();
     }
@@ -206,6 +233,7 @@
       document.getElementById('login-screen').classList.add('hidden');
       document.getElementById('admin-screen').classList.remove('hidden');
       loadContacts();
+      loadIdeas();
       loadTeam();
     }
 
@@ -227,8 +255,12 @@
       });
     }
 
+    function exportData(type, format) {
+      window.open(`/api/admin-export?type=${type}&format=${format}&token=${encodeURIComponent(authToken)}`, '_blank');
+    }
+
     // ═══════════════════════════════════════════════════════════════════════════
-    // CONTACTS
+    // CONTACTS (inscriptions)
     // ═══════════════════════════════════════════════════════════════════════════
     async function loadContacts() {
       const loading = document.getElementById('contacts-loading');
@@ -246,13 +278,6 @@
         const data = await resp.json();
 
         loading.classList.add('hidden');
-
-        if (data.message && (!data.contacts || data.contacts.length === 0)) {
-          msgText.textContent = data.message;
-          msgDiv.classList.remove('hidden');
-          document.getElementById('stat-inscriptions').textContent = '—';
-          return;
-        }
 
         const contacts = data.contacts || [];
         document.getElementById('stat-inscriptions').textContent = data.total || contacts.length;
@@ -277,8 +302,137 @@
 
       } catch {
         loading.classList.add('hidden');
-        msgText.textContent = 'Erreur de chargement des contacts.';
+        msgText.textContent = 'Erreur de chargement des inscriptions.';
         msgDiv.classList.remove('hidden');
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // IDEAS (idées citoyennes)
+    // ═══════════════════════════════════════════════════════════════════════════
+    async function loadIdeas() {
+      try {
+        const resp = await fetch('/api/admin-ideas', {
+          headers: { 'Authorization': 'Bearer ' + authToken },
+        });
+        if (resp.status === 401) { logout(); return; }
+        const data = await resp.json();
+
+        document.getElementById('ideas-loading').classList.add('hidden');
+
+        allIdeas = data.ideas || [];
+        document.getElementById('stat-idees').textContent = data.total || 0;
+
+        if (data.unread > 0) {
+          const el = document.getElementById('stat-idees-unread');
+          el.textContent = `${data.unread} non lue${data.unread > 1 ? 's' : ''}`;
+          el.classList.remove('hidden');
+          const badge = document.getElementById('tab-idees-badge');
+          badge.textContent = data.unread;
+          badge.classList.remove('hidden');
+        }
+
+        renderIdeas();
+      } catch {
+        document.getElementById('ideas-loading').classList.add('hidden');
+        document.getElementById('ideas-empty').classList.remove('hidden');
+      }
+    }
+
+    function renderIdeas() {
+      const sujetFilter = document.getElementById('ideas-filter-sujet').value;
+      const unreadOnly = document.getElementById('ideas-filter-unread').checked;
+
+      let filtered = allIdeas;
+      if (sujetFilter) filtered = filtered.filter(i => i.sujet === sujetFilter);
+      if (unreadOnly) filtered = filtered.filter(i => !i.is_read);
+
+      const container = document.getElementById('ideas-list');
+      const empty = document.getElementById('ideas-empty');
+
+      if (filtered.length === 0) {
+        container.classList.add('hidden');
+        empty.classList.remove('hidden');
+        return;
+      }
+
+      empty.classList.add('hidden');
+      container.classList.remove('hidden');
+
+      container.innerHTML = filtered.map(idea => `
+        <div class="bg-white rounded-2xl border shadow-sm p-5 hover:shadow-md transition-shadow ${!idea.is_read ? 'border-l-4 border-l-orange-400 border-gray-100' : 'border-gray-100'}">
+          <div class="flex flex-col sm:flex-row sm:items-start gap-4">
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-2 flex-wrap">
+                <span class="inline-block px-2.5 py-0.5 bg-orange-100 text-orange-700 rounded-full text-xs font-semibold">${esc(idea.sujet)}</span>
+                ${!idea.is_read ? '<span class="inline-block px-2 py-0.5 bg-red-100 text-red-600 rounded-full text-[10px] font-bold uppercase">Nouveau</span>' : ''}
+                <span class="text-xs text-gray-400">${formatDate(idea.created_at)}</span>
+              </div>
+              <p class="text-gray-800 text-sm leading-relaxed mb-3" style="white-space:pre-wrap;">${esc(idea.message)}</p>
+              <div class="flex flex-wrap gap-4 text-xs text-gray-500">
+                <span><strong class="text-gray-700">${esc(idea.prenom)} ${esc(idea.nom)}</strong></span>
+                <a href="mailto:${esc(idea.email)}" class="text-blue-600 hover:underline">${esc(idea.email)}</a>
+                <span>${esc(idea.telephone)}</span>
+              </div>
+            </div>
+            <button onclick="toggleRead('${idea.id}', ${!idea.is_read})" class="shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${idea.is_read ? 'bg-gray-100 text-gray-600 hover:bg-orange-100 hover:text-orange-700' : 'bg-orange-100 text-orange-700 hover:bg-orange-200'}">
+              ${idea.is_read ? 'Marquer non lu' : 'Marquer lu'}
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function toggleRead(id, is_read) {
+      try {
+        await fetch('/api/admin-ideas', {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + authToken,
+          },
+          body: JSON.stringify({ id, is_read }),
+        });
+        // Mettre à jour localement
+        const idea = allIdeas.find(i => i.id === id);
+        if (idea) idea.is_read = is_read;
+        updateIdeasStats();
+        renderIdeas();
+      } catch {
+        alert('Erreur lors de la mise à jour.');
+      }
+    }
+
+    async function markAllRead() {
+      const unread = allIdeas.filter(i => !i.is_read);
+      for (const idea of unread) {
+        await fetch('/api/admin-ideas', {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + authToken,
+          },
+          body: JSON.stringify({ id: idea.id, is_read: true }),
+        });
+        idea.is_read = true;
+      }
+      updateIdeasStats();
+      renderIdeas();
+    }
+
+    function updateIdeasStats() {
+      const unread = allIdeas.filter(i => !i.is_read).length;
+      document.getElementById('stat-idees').textContent = allIdeas.length;
+      const unreadEl = document.getElementById('stat-idees-unread');
+      const badge = document.getElementById('tab-idees-badge');
+      if (unread > 0) {
+        unreadEl.textContent = `${unread} non lue${unread > 1 ? 's' : ''}`;
+        unreadEl.classList.remove('hidden');
+        badge.textContent = unread;
+        badge.classList.remove('hidden');
+      } else {
+        unreadEl.classList.add('hidden');
+        badge.classList.add('hidden');
       }
     }
 
@@ -287,16 +441,25 @@
     // ═══════════════════════════════════════════════════════════════════════════
     async function loadTeam() {
       try {
-        const resp = await fetch('../data/team.json');
-        const data = await resp.json();
-        const members = data.members || [];
+        let members;
+        // Essayer l'API Supabase d'abord, puis le fichier statique en fallback
+        try {
+          const resp = await fetch('/api/team');
+          if (!resp.ok) throw new Error();
+          const data = await resp.json();
+          members = data.members || [];
+        } catch {
+          const resp = await fetch('../data/team.json');
+          const data = await resp.json();
+          members = data.members || [];
+        }
 
         document.getElementById('stat-equipe').textContent = members.length;
 
         document.getElementById('team-grid').innerHTML = members.map(m => `
           <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
             <div class="h-32 bg-gray-100 overflow-hidden">
-              <img src="../${esc(m.photo)}" alt="${esc(m.prenom + ' ' + m.nom)}" class="w-full h-full object-cover object-top" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23e5e7eb%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2255%22 text-anchor=%22middle%22 fill=%22%239ca3af%22 font-size=%2230%22>${m.prenom[0]}${m.nom[0]}</text></svg>'">
+              <img src="../${esc(m.photo)}" alt="${esc(m.prenom + ' ' + m.nom)}" class="w-full h-full object-cover object-top" onerror="this.style.display='none'">
             </div>
             <div class="p-3">
               <div class="flex items-center gap-2 mb-1">
@@ -311,7 +474,7 @@
         `).join('');
 
       } catch {
-        document.getElementById('team-grid').innerHTML = '<p class="text-gray-400 col-span-full text-center py-8">Erreur de chargement de l\'équipe.</p>';
+        document.getElementById('team-grid').innerHTML = '<p class="text-gray-400 col-span-full text-center py-8">Erreur de chargement.</p>';
       }
     }
 

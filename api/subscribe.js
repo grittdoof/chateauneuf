@@ -4,6 +4,7 @@
  */
 
 import { sendEmail, addContactToBrevo, escapeHtml, getFromEmail, getFromName, getTeamEmails } from './_email.js';
+import { getSupabase } from './_supabase.js';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -39,7 +40,24 @@ export default async function handler(req, res) {
   const fromEmail = getFromEmail();
   const fromName = getFromName();
 
-  // ── Ajout dans Brevo (si API key configurée) ──────────────────────────────
+  // ── Enregistrement dans Supabase ────────────────────────────────────────
+  try {
+    const supabase = getSupabase();
+    const { error: dbError } = await supabase
+      .from('subscriptions')
+      .upsert({
+        prenom: clean.prenom,
+        nom: clean.nom,
+        email: clean.email,
+        telephone: clean.telephone,
+      }, { onConflict: 'email' });
+
+    if (dbError) console.error('[SUPABASE ERROR]', dbError.message);
+  } catch (err) {
+    console.error('[SUPABASE ERROR]', err.message);
+  }
+
+  // ── Ajout dans Brevo (si API key configurée — optionnel) ──────────────────
   await addContactToBrevo(clean);
 
   // ── Email de confirmation à l'utilisateur ─────────────────────────────────

@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "nodemailer": "^6.9.0",
-    "bcryptjs": "^2.4.3"
+    "@supabase/supabase-js": "^2.49.0",
+    "bcryptjs": "^2.4.3",
+    "nodemailer": "^6.9.0"
   }
 }

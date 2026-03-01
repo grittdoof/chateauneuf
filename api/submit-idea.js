@@ -4,6 +4,7 @@
  */
 
 import { sendEmail, escapeHtml, getTeamEmails, getFromEmail } from './_email.js';
+import { getSupabase } from './_supabase.js';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -39,6 +40,26 @@ export default async function handler(req, res) {
     sujet: escapeHtml(sujet.trim()),
     message: escapeHtml(message.trim()),
   };
+
+  // ── Enregistrement dans Supabase ────────────────────────────────────────
+  try {
+    const supabase = getSupabase();
+    const { error: dbError } = await supabase
+      .from('ideas')
+      .insert({
+        prenom: clean.prenom,
+        nom: clean.nom,
+        email: clean.email,
+        telephone: clean.telephone,
+        sujet: clean.sujet,
+        message: clean.message,
+        is_read: false,
+      });
+
+    if (dbError) console.error('[SUPABASE ERROR]', dbError.message);
+  } catch (err) {
+    console.error('[SUPABASE ERROR]', err.message);
+  }
 
   // ── Notification à l'équipe ────────────────────────────────────────────────
   await sendEmail({
@@ -130,7 +151,7 @@ function buildUserEmail({ prenom, sujet }) {
               Nous la lirons attentivement et pourrons revenir vers vous si nécessaire.
             </p>
             <div style="background:#E6F7FC;border-left:4px solid #0098D8;border-radius:0 8px 8px 0;padding:16px 20px;margin:24px 0;">
-              <p style="margin:0;color:#005B82;font-weight:600;font-size:15px;">Réunion publique — Mardi 11 mars 2026</p>
+              <p style="margin:0;color:#005B82;font-weight:600;font-size:15px;">Réunion publique — Mercredi 11 mars 2026</p>
               <p style="margin:6px 0 0;color:#005B82;font-size:14px;">19h00 · Salle communale de Châteauneuf</p>
               <p style="margin:6px 0 0;color:#374151;font-size:14px;">Venez nous rencontrer et échanger en direct !</p>
             </div>
