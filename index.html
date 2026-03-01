@@ -1090,12 +1090,20 @@
       }
     });
 
+    // Helper : résoudre les URLs photos (Supabase absolue ou chemin relatif local)
+    function resolvePhoto(photo) {
+      if (!photo) return '';
+      if (photo.startsWith('http://') || photo.startsWith('https://')) return photo;
+      return photo; // chemin relatif local (images/equipe/...)
+    }
+
     function buildTeamCard(member, index) {
       const scheme = colorSchemes[index % 3];
       const isHead = member.id === 1;
       const displayName = member.prenom + ' ' + member.nom;
       const ageStr = member.age ? member.age + ' ans' : '';
       const profStr = member.profession || '';
+      const photoSrc = resolvePhoto(member.photo);
 
       return `
         <div class="reveal team-member-card" style="animation-delay: ${0.05 * index}s;" onclick="openModal(${member.id})">
@@ -1104,7 +1112,7 @@
             <div style="position:absolute;top:.75rem;right:.75rem;z-index:10;width:1.75rem;height:1.75rem;border-radius:9999px;background:rgba(0,0,0,.55);color:white;font-size:.7rem;font-weight:700;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)">${member.id}</div>
             <div class="relative h-52 overflow-hidden">
               <img
-                src="${member.photo}"
+                src="${photoSrc}"
                 alt="${displayName}"
                 class="member-photo w-full h-full object-cover object-top"
                 loading="lazy"
@@ -1129,12 +1137,13 @@
     function buildModal(member) {
       const displayName = member.prenom + ' ' + member.nom;
       const hasBio = member.q1 || member.q2 || member.q3;
+      const photoSrc = resolvePhoto(member.photo);
       return `
         <div id="modal-${member.id}" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Profil de ${displayName}">
           <div class="modal-container">
             <button class="modal-close" onclick="closeModal(${member.id})" aria-label="Fermer">✕</button>
             <div class="modal-photo">
-              <img src="${member.photo}" alt="${displayName}" onerror="this.src='images/logo-chateauneuf.png'; this.style.objectFit='contain'; this.style.padding='2rem'; this.style.background='#e8f4fb'">
+              <img src="${photoSrc}" alt="${displayName}" onerror="this.src='images/logo-chateauneuf.png'; this.style.objectFit='contain'; this.style.padding='2rem'; this.style.background='#e8f4fb'">
               <div class="modal-photo-logo"><img src="images/logo.png" alt=""></div>
             </div>
             <div class="p-6 sm:p-8">

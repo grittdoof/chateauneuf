@@ -125,6 +125,40 @@ CREATE POLICY "anon_select_team" ON team_members
   FOR SELECT TO anon USING (is_active = true);
 ```
 
+## Étape 5b : Configurer Supabase Storage (photos équipe)
+
+1. Aller dans **Storage** (barre latérale gauche)
+2. Cliquer **"New bucket"**
+3. **Nom** : `team-photos`
+4. **Public bucket** : ✅ Oui (cocher)
+5. **File size limit** : `2MB`
+6. **Allowed MIME types** : `image/jpeg, image/png, image/webp`
+7. Cliquer **"Create bucket"**
+
+### Policies RLS pour Storage
+
+Dans **SQL Editor**, nouvelle requête :
+
+```sql
+-- Lecture publique des photos d'équipe
+CREATE POLICY "Public read team-photos"
+  ON storage.objects FOR SELECT
+  TO anon
+  USING (bucket_id = 'team-photos');
+
+-- Accès complet pour le service_role (utilisé par l'API)
+CREATE POLICY "Service role full access team-photos"
+  ON storage.objects FOR ALL
+  TO service_role
+  USING (bucket_id = 'team-photos')
+  WITH CHECK (bucket_id = 'team-photos');
+```
+
+Les photos uploadées depuis l'admin seront accessibles via :
+```
+https://<VOTRE_PROJET>.supabase.co/storage/v1/object/public/team-photos/<nom-fichier>.jpg
+```
+
 ## Étape 6 : Insérer les données initiales
 
 ### 6a — Témoignages (5 citations)
@@ -218,4 +252,5 @@ Après avoir ajouté les variables :
 - **Lecture publique** : `/api/testimonials` + `/api/team` (avec cache 5min)
 - **Écriture publique** : `/api/subscribe` + `/api/submit-idea` → Supabase + emails
 - **Admin** : `/api/admin-*` → authentifié par token HMAC
+- **Admin Équipe** : `/api/admin-team` (CRUD) + `/api/admin-team-photo` (upload photos → Supabase Storage)
 - **Export** : `/api/admin-export?type=subscriptions&format=excel`
