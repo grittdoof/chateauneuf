@@ -614,7 +614,7 @@
       <div class="text-center mb-16 reveal">
         <span class="inline-block px-4 py-1 bg-primary-100 text-primary-600 rounded-full text-sm font-semibold mb-4">Notre vision</span>
         <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-800 mb-4">
-          Une équipe à <span class="gradient-text">votre service</span>
+          Une équipe à <span class="text-primary-600">votre service</span>
         </h2>
         <p class="text-xl text-gray-600 max-w-3xl mx-auto">
           Nous croyons en une commune vivante et dynamique où chaque habitant trouve sa place.
@@ -654,11 +654,8 @@
       <div class="text-center mb-12 reveal">
         <span class="inline-block px-4 py-1 bg-accent-100 text-accent-600 rounded-full text-sm font-semibold mb-4">Notre force</span>
         <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-800 mb-4">
-          Une équipe <span class="gradient-text">à votre service</span>
+          <span class="text-secondary-500">17 Castelneuviens motivés</span>, issus de tous horizons, unis pour notre commune
         </h2>
-        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-          17 Castelneuviens motivés, issus de tous horizons, unis pour notre commune
-        </p>
       </div>
 
       <!-- Team Grid (rendered by JS from team.json) -->
@@ -790,10 +787,10 @@
       <div class="text-center mb-12 reveal">
         <span class="inline-block px-4 py-1 bg-primary-100 text-primary-600 rounded-full text-sm font-semibold mb-4">Notre programme</span>
         <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-800 mb-4">
-          Recevez notre <span class="gradient-text">programme</span>
+          Recevez bientôt notre <span class="text-accent-600">programme</span>
         </h2>
         <p class="text-xl text-gray-600">
-          Inscrivez-vous pour recevoir en avant-première notre programme complet pour Châteauneuf et les informations sur nos prochains événements.
+          Inscrivez-vous pour recevoir très bientôt notre programme complet pour Châteauneuf et les informations sur nos prochains événements.
         </p>
       </div>
 
@@ -830,6 +827,19 @@
             <p class="text-red-500 text-xs mt-1 hidden" id="telephone-error">Numéro de portable requis</p>
           </div>
 
+          <div class="mb-5">
+            <label class="flex items-start gap-3 cursor-pointer group">
+              <input type="checkbox" id="rgpd-consent" name="rgpd_consent" required
+                class="mt-1 w-4 h-4 rounded border-gray-300 text-primary-500 focus:ring-primary-500 flex-shrink-0">
+              <span class="text-xs text-gray-500 leading-relaxed group-hover:text-gray-700 transition-colors">
+                En soumettant ce formulaire, j'accepte que mes données soient traitées conformément à la
+                <a href="politique-confidentialite.html" target="_blank" class="text-primary-600 hover:underline font-medium">politique de confidentialité</a>.
+                <span class="text-red-500">*</span>
+              </span>
+            </label>
+            <p class="text-red-500 text-xs mt-1 hidden" id="rgpd-consent-error">Veuillez accepter la politique de confidentialité</p>
+          </div>
+
           <div id="form-error-msg" class="hidden bg-red-50 text-red-700 rounded-xl p-4 mb-5 text-sm"></div>
 
           <button type="submit" id="submit-btn" class="w-full py-4 px-8 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-bold rounded-xl text-lg shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3">
@@ -839,7 +849,8 @@
 
           <p class="text-center text-gray-400 text-xs mt-5">
             <i data-lucide="lock" class="w-3 h-3 inline mr-1"></i>
-            Vos données sont confidentielles et ne seront jamais partagées. Conformément au RGPD, vous pouvez vous désinscrire à tout moment.
+            Vos données sont traitées conformément à notre
+            <a href="politique-confidentialite.html" target="_blank" class="text-primary-400 hover:underline">politique de confidentialité</a>.
           </p>
         </form>
       </div>
@@ -871,8 +882,8 @@
             </div>
           </div>
           <div class="flex space-x-4">
-            <a href="#" class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-white hover:bg-white hover:text-primary-600 transition-all duration-300">
-              <i data-lucide="facebook" class="w-5 h-5"></i>
+            <a href="https://www.facebook.com/profile.php?id=61586244773921" class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-white hover:bg-white hover:text-primary-600 transition-all duration-300">
+              <i data-lucide="facebook" class="w-5 h-5"></i> Entreprendre Ensemble pour Châteauneuf - Vendée
             </a>
           </div>
         </div>
@@ -905,8 +916,8 @@
         <div>
           <h4 class="font-semibold mb-4">Légal</h4>
           <ul class="space-y-2 text-gray-400 text-sm">
-            <li><a href="#" class="hover:text-white transition-colors">Mentions légales</a></li>
-            <li><a href="#" class="hover:text-white transition-colors">Politique de confidentialité</a></li>
+            <li><a href="mentions-legales.html" class="hover:text-white transition-colors">Mentions légales</a></li>
+            <li><a href="politique-confidentialite.html" class="hover:text-white transition-colors">Politique de confidentialité</a></li>
           </ul>
         </div>
       </div>
@@ -993,6 +1004,19 @@
             <p class="text-red-500 text-xs mt-1 hidden" id="idea-message-error">Merci de décrire votre idée</p>
           </div>
 
+          <div style="margin-bottom:1rem">
+            <label class="flex items-start gap-3 cursor-pointer group">
+              <input type="checkbox" id="idea-rgpd-consent" name="rgpd_consent" required
+                class="mt-1 w-4 h-4 rounded border-gray-300 text-primary-500 focus:ring-primary-500 flex-shrink-0">
+              <span class="text-xs text-gray-500 leading-relaxed group-hover:text-gray-700 transition-colors">
+                En soumettant ce formulaire, j'accepte que mes données soient traitées conformément à la
+                <a href="politique-confidentialite.html" target="_blank" class="text-primary-600 hover:underline font-medium">politique de confidentialité</a>.
+                <span class="text-red-500">*</span>
+              </span>
+            </label>
+            <p class="text-red-500 text-xs mt-1 hidden" id="idea-rgpd-consent-error">Veuillez accepter la politique de confidentialité</p>
+          </div>
+
           <div id="idea-error-msg" class="hidden bg-red-50 text-red-700 rounded-xl p-4 mb-4 text-sm"></div>
 
           <button type="submit" id="idea-submit-btn" class="w-full py-3.5 px-8 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-bold rounded-xl text-base shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2">
@@ -1002,7 +1026,8 @@
 
           <p style="text-align:center;color:#9ca3af;font-size:.7rem;margin-top:.875rem">
             <i data-lucide="lock" style="width:.7rem;height:.7rem;display:inline;margin-right:.25rem"></i>
-            Vos données restent confidentielles et ne seront jamais partagées.
+            Vos données sont traitées conformément à notre
+            <a href="politique-confidentialite.html" target="_blank" style="color:#0098D8;text-decoration:underline">politique de confidentialité</a>.
           </p>
         </form>
       </div>
@@ -1091,10 +1116,14 @@
     });
 
     // Helper : résoudre les URLs photos (Supabase absolue ou chemin relatif local)
+    // Privilégie le format WebP (10× plus léger que JPEG)
     function resolvePhoto(photo) {
       if (!photo) return '';
       if (photo.startsWith('http://') || photo.startsWith('https://')) return photo;
-      return photo; // chemin relatif local (images/equipe/...)
+      if (photo.endsWith('.jpg') || photo.endsWith('.jpeg')) {
+        return photo.replace(/\.jpe?g$/i, '.webp');
+      }
+      return photo;
     }
 
     function buildTeamCard(member, index) {
@@ -1171,7 +1200,7 @@
     }
 
     // Données embarquées en fallback (utilisées si fetch échoue, ex: ouverture locale en file://)
-    const TEAM_FALLBACK = {"members":[{"id":1,"prenom":"Aurélien","nom":"Arnaud","role":"Tête de liste","age":36,"profession":"Directeur conseil en agence de communication","photo":"images/equipe/Aurélien Arnaud.jpg","depuis":"Castelneuvien de toujours","q1":"Je souhaite apporter mon expertise en communication et mon engagement sincère pour porter les projets des habitants avec clarté, transparence et ambition.","q2":"36 ans, directeur conseil en agence de communication. Je travaille au quotidien à valoriser des projets et créer du lien entre les acteurs d'un territoire. Natif de Châteauneuf, je connais chaque association et chaque réalité de cette commune.","q3":"Parce que Châteauneuf mérite une équipe transparente, à l'écoute et tournée vers l'avenir. Je suis fier de porter cette liste citoyenne avec conviction."},{"id":2,"prenom":"Fanellie","nom":"Egron","role":"","age":null,"profession":"Infirmière","photo":"images/equipe/Fanellie Egron.jpg","depuis":"","q1":"","q2":"","q3":""},{"id":3,"prenom":"Jordan","nom":"Lahoreau","role":"","age":null,"profession":"","photo":"images/equipe/Jordan Lahoreau.jpg","depuis":"","q1":"","q2":"","q3":""},{"id":4,"prenom":"Clémence","nom":"Bessau","role":"","age":25,"profession":"Conseillère bancaire","photo":"images/equipe/Clémence Bessau.jpg","depuis":"Habitante depuis 2023","q1":"Je souhaite apporter mon dynamisme, ma rigueur et mon sens de l'écoute afin de soutenir et contribuer à des projets concrets pour les habitants.","q2":"25 ans, conseillère bancaire et ancienne agent immobilier. J'accompagne au quotidien des familles dans leurs projets, avec sérieux et proximité.","q3":"En tant que jeune maman, j'aspire à défendre une commune dynamique, attentive aux familles et tournée vers l'avenir."},{"id":5,"prenom":"Aurélien","nom":"Bonnin","role":"","age":41,"profession":"Électricien dans le bâtiment","photo":"images/equipe/Aurélien Bonnin.jpg","depuis":"Natif de la commune, Castelneuvien depuis 41 ans","q1":"Je souhaite m'investir concrètement. J'ai toujours aimé m'impliquer dans ce que je fais et je veux aujourd'hui mettre cette énergie au service de ma commune.","q2":"41 ans. Après 15 ans comme technicien audiovisuel dans l'événementiel, j'ai choisi de me reconvertir et je suis maintenant électricien dans le bâtiment.","q3":"Parce que je souhaite participer activement à la vie locale plutôt que rester simple observateur. Cette liste correspond à mes valeurs : proximité, écoute, bon sens et esprit collectif."},{"id":6,"prenom":"Azeline","nom":"Cornut","role":"","age":36,"profession":"Éclairagiste de théâtre","photo":"images/equipe/Azeline Cornut.jpg","depuis":"Installée à Châteauneuf depuis 3 ans","q1":"Je souhaite apporter une énergie nouvelle et constructive à la commune, en pensant le territoire à hauteur d'enfant — parce qu'une commune pensée pour les enfants est une commune plus sûre, plus solidaire, plus durable et donc plus agréable pour tous.","q2":"36 ans, éclairagiste dans le théâtre. Ce métier de l'ombre qui met en lumière me passionne. Savant mélange entre technique et artistique, il requiert un sens du rythme, de la créativité, de l'adaptabilité et un goût pour le travail en équipe.","q3":"J'ai toujours eu foi en la force du collectif. Cette liste citoyenne à Châteauneuf, c'est l'opportunité d'œuvrer pour l'intérêt général, avec une approche fondée sur l'écoute et la participation citoyenne."},{"id":7,"prenom":"Yannick","nom":"Oiry","role":"","age":57,"profession":"Agent administratif exploitation (Voyages Nombalais)","photo":"images/equipe/Yannick Oiry.jpg","depuis":"","q1":"Respect du budget, transparence et ne pas augmenter la dette par habitant. Participer à la protection de l'environnement. Développer les activités pour l'ensemble des habitants. Préserver l'école. Développer le nombre d'entreprises dans la zone artisanale.","q2":"57 ans, agent administratif exploitation aux Voyages Nombalais : gestion des heures et primes conducteurs (150 agents), suivi de la consommation carburant, mise en place des formations obligatoires, suivi des infractions, membre du CSE et référent harcèlement.","q3":"Je m'engage sur cette liste citoyenne pour être au service des habitants de la commune et améliorer leur quotidien."},{"id":8,"prenom":"Annabelle","nom":"Briand","role":"","age":34,"profession":"Assistante comptable (secteur électricité & photovoltaïque)","photo":"images/equipe/Annabelle Briand.jpg","depuis":"Habitante de toujours","q1":"Je souhaite apporter un nouveau dynamisme à la commune, être aux côtés des habitants pour leur montrer que la municipalité peut être à leur écoute. 7 ans à l'OGEC de l'école dont 2 ans de présidence.","q2":"34 ans, assistante comptable dans une entreprise privée dans le domaine de l'électricité et du photovoltaïque.","q3":"Je m'engage pour apporter plus de soutien aux associations et à l'école. Je n'oublie pas nos aînés, auxquels j'aimerais tisser un lien avec les plus jeunes, avec des infrastructures et activités adaptées. La parole des Castelneuviens a été oubliée et je souhaite que cela change."},{"id":9,"prenom":"Serge","nom":"Cousin","role":"","age":69,"profession":"Architecte DPLG (retraité)","photo":"images/equipe/Serge Cousin.jpg","depuis":"Demeure à Châteauneuf depuis janvier 2021","q1":"Un peu de mon temps pour aider l'équipe et donc la communauté, en fonction des connaissances liées à mon vécu et à mes disponibilités.","q2":"69 ans. Bac F4 (Bâtiment/Génie civil) en 1974, BTS ATEB en 1976, Architecte DPLG en 1982. Parcours riche : dessinateur en bureau d'études béton armé, architecte salarié, directeur d'un négoce matériaux, architecte libéral, puis surveillant de travaux chez des bailleurs sociaux et en cabinet d'architecture.","q3":"Je m'engage pour apporter mon expérience au service de la commune et de ses habitants."},{"id":10,"prenom":"Vicky","nom":"Gervais","role":"","age":null,"profession":"","photo":"images/equipe/Vicky Gervais.jpg","depuis":"","q1":"","q2":"","q3":""},{"id":11,"prenom":"Olivier","nom":"Roux","role":"","age":null,"profession":"","photo":"images/equipe/Olivier Roux.jpg","depuis":"","q1":"","q2":"","q3":""},{"id":12,"prenom":"Melissa","nom":"Artus","role":"","age":30,"profession":"Coiffeuse, gérante du salon A'Melisse Coiffure (Bouin)","photo":"images/equipe/Melissa Artus.jpg","depuis":"Habitante depuis 11 ans","q1":"Je souhaite m'engager pleinement pour Châteauneuf : soutenir activement les associations locales, accompagner l'école dans ses projets et contribuer à maintenir une commune dynamique et bienveillante.","q2":"30 ans, coiffeuse depuis 15 ans et gérante de mon propre salon A'Melisse Coiffure à Bouin depuis 1 an.","q3":"Mon engagement repose sur l'écoute, la proximité et l'action, au service de tous les habitants de Châteauneuf."},{"id":13,"prenom":"Antoine","nom":"Egron","role":"","age":null,"profession":"","photo":"images/equipe/Antoine Egron.jpg","depuis":"","q1":"","q2":"","q3":""},{"id":14,"prenom":"Cynthia","nom":"Grosseau","role":"","age":28,"profession":"Commerciale spécialisée carrelage & salle de bain","photo":"images/equipe/Cynthia Grosseau.jpg","depuis":"Habitante depuis 2019","q1":"Je veux m'investir pour améliorer la sécurité, surtout pour les enfants, et favoriser un cadre de vie dynamique fondé sur l'écoute de tous.","q2":"28 ans, travaillant dans le commerce spécialisé en carrelage et aménagement de salle de bain. J'accompagne mes clients dans la réalisation de projets personnalisés.","q3":"Je rejoins cette liste pour sa convivialité et la diversité des idées. Chacun possède un savoir-faire à partager."},{"id":15,"prenom":"Thomas","nom":"Barraud","role":"","age":null,"profession":"","photo":"images/equipe/Thomas barraud.jpg","depuis":"","q1":"","q2":"","q3":""},{"id":16,"prenom":"Laure","nom":"Lamour","role":"","age":38,"profession":"Assistante audioprothésiste, en reconversion comme carreleuse","photo":"images/equipe/Laure Lamour.jpg","depuis":"Sur la commune depuis 2013","q1":"Grâce à mon engagement associatif dans la commune, je connais déjà quelques acteurs locaux et la municipalité. Mes métiers dans le paramédical m'ont apporté une capacité d'organisation et des connaissances en démarches administratives.","q2":"38 ans, ancienne opticienne pendant 10 ans, puis assistante audioprothésiste depuis 8 ans. Actuellement en reconversion professionnelle comme carreleuse.","q3":"Je souhaite que chaque citoyen prenne sa place et devienne acteur sur la commune. Je veux faire de Châteauneuf une commune sereine et facile à vivre, du bourg jusqu'aux petits coins les plus reculés."},{"id":17,"prenom":"Jordan","nom":"Belanger","role":"","age":null,"profession":"","photo":"images/equipe/Jordan Belanger.jpg","depuis":"","q1":"","q2":"","q3":""}]};
+    const TEAM_FALLBACK = {"members":[{"id":1,"prenom":"Aurélien","nom":"Arnaud","role":"Tête de liste","age":36,"profession":"Directeur conseil en agence de communication","photo":"images/equipe/Aurélien Arnaud.webp","depuis":"Castelneuvien de toujours","q1":"Je souhaite apporter mon expertise en communication et mon engagement sincère pour porter les projets des habitants avec clarté, transparence et ambition.","q2":"36 ans, directeur conseil en agence de communication. Je travaille au quotidien à valoriser des projets et créer du lien entre les acteurs d'un territoire. Natif de Châteauneuf, je connais chaque association et chaque réalité de cette commune.","q3":"Parce que Châteauneuf mérite une équipe transparente, à l'écoute et tournée vers l'avenir. Je suis fier de porter cette liste citoyenne avec conviction."},{"id":2,"prenom":"Fanellie","nom":"Egron","role":"","age":null,"profession":"Infirmière","photo":"images/equipe/Fanellie Egron.webp","depuis":"","q1":"","q2":"","q3":""},{"id":3,"prenom":"Jordan","nom":"Lahoreau","role":"","age":null,"profession":"","photo":"images/equipe/Jordan Lahoreau.webp","depuis":"","q1":"","q2":"","q3":""},{"id":4,"prenom":"Clémence","nom":"Bessau","role":"","age":25,"profession":"Conseillère bancaire","photo":"images/equipe/Clémence Bessau.webp","depuis":"Habitante depuis 2023","q1":"Je souhaite apporter mon dynamisme, ma rigueur et mon sens de l'écoute afin de soutenir et contribuer à des projets concrets pour les habitants.","q2":"25 ans, conseillère bancaire et ancienne agent immobilier. J'accompagne au quotidien des familles dans leurs projets, avec sérieux et proximité.","q3":"En tant que jeune maman, j'aspire à défendre une commune dynamique, attentive aux familles et tournée vers l'avenir."},{"id":5,"prenom":"Aurélien","nom":"Bonnin","role":"","age":41,"profession":"Électricien dans le bâtiment","photo":"images/equipe/Aurélien Bonnin.webp","depuis":"Natif de la commune, Castelneuvien depuis 41 ans","q1":"Je souhaite m'investir concrètement. J'ai toujours aimé m'impliquer dans ce que je fais et je veux aujourd'hui mettre cette énergie au service de ma commune.","q2":"41 ans. Après 15 ans comme technicien audiovisuel dans l'événementiel, j'ai choisi de me reconvertir et je suis maintenant électricien dans le bâtiment.","q3":"Parce que je souhaite participer activement à la vie locale plutôt que rester simple observateur. Cette liste correspond à mes valeurs : proximité, écoute, bon sens et esprit collectif."},{"id":6,"prenom":"Azeline","nom":"Cornut","role":"","age":36,"profession":"Éclairagiste de théâtre","photo":"images/equipe/Azeline Cornut.webp","depuis":"Installée à Châteauneuf depuis 3 ans","q1":"Je souhaite apporter une énergie nouvelle et constructive à la commune, en pensant le territoire à hauteur d'enfant — parce qu'une commune pensée pour les enfants est une commune plus sûre, plus solidaire, plus durable et donc plus agréable pour tous.","q2":"36 ans, éclairagiste dans le théâtre. Ce métier de l'ombre qui met en lumière me passionne. Savant mélange entre technique et artistique, il requiert un sens du rythme, de la créativité, de l'adaptabilité et un goût pour le travail en équipe.","q3":"J'ai toujours eu foi en la force du collectif. Cette liste citoyenne à Châteauneuf, c'est l'opportunité d'œuvrer pour l'intérêt général, avec une approche fondée sur l'écoute et la participation citoyenne."},{"id":7,"prenom":"Yannick","nom":"Oiry","role":"","age":57,"profession":"Agent administratif exploitation (Voyages Nombalais)","photo":"images/equipe/Yannick Oiry.webp","depuis":"","q1":"Respect du budget, transparence et ne pas augmenter la dette par habitant. Participer à la protection de l'environnement. Développer les activités pour l'ensemble des habitants. Préserver l'école. Développer le nombre d'entreprises dans la zone artisanale.","q2":"57 ans, agent administratif exploitation aux Voyages Nombalais : gestion des heures et primes conducteurs (150 agents), suivi de la consommation carburant, mise en place des formations obligatoires, suivi des infractions, membre du CSE et référent harcèlement.","q3":"Je m'engage sur cette liste citoyenne pour être au service des habitants de la commune et améliorer leur quotidien."},{"id":8,"prenom":"Annabelle","nom":"Briand","role":"","age":34,"profession":"Assistante comptable (secteur électricité & photovoltaïque)","photo":"images/equipe/Annabelle Briand.webp","depuis":"Habitante de toujours","q1":"Je souhaite apporter un nouveau dynamisme à la commune, être aux côtés des habitants pour leur montrer que la municipalité peut être à leur écoute. 7 ans à l'OGEC de l'école dont 2 ans de présidence.","q2":"34 ans, assistante comptable dans une entreprise privée dans le domaine de l'électricité et du photovoltaïque.","q3":"Je m'engage pour apporter plus de soutien aux associations et à l'école. Je n'oublie pas nos aînés, auxquels j'aimerais tisser un lien avec les plus jeunes, avec des infrastructures et activités adaptées. La parole des Castelneuviens a été oubliée et je souhaite que cela change."},{"id":9,"prenom":"Serge","nom":"Cousin","role":"","age":69,"profession":"Architecte DPLG (retraité)","photo":"images/equipe/Serge Cousin.webp","depuis":"Demeure à Châteauneuf depuis janvier 2021","q1":"Un peu de mon temps pour aider l'équipe et donc la communauté, en fonction des connaissances liées à mon vécu et à mes disponibilités.","q2":"69 ans. Bac F4 (Bâtiment/Génie civil) en 1974, BTS ATEB en 1976, Architecte DPLG en 1982. Parcours riche : dessinateur en bureau d'études béton armé, architecte salarié, directeur d'un négoce matériaux, architecte libéral, puis surveillant de travaux chez des bailleurs sociaux et en cabinet d'architecture.","q3":"Je m'engage pour apporter mon expérience au service de la commune et de ses habitants."},{"id":10,"prenom":"Vicky","nom":"Gervais","role":"","age":null,"profession":"","photo":"images/equipe/Vicky Gervais.webp","depuis":"","q1":"","q2":"","q3":""},{"id":11,"prenom":"Olivier","nom":"Roux","role":"","age":null,"profession":"","photo":"images/equipe/Olivier Roux.webp","depuis":"","q1":"","q2":"","q3":""},{"id":12,"prenom":"Melissa","nom":"Artus","role":"","age":30,"profession":"Coiffeuse, gérante du salon A'Melisse Coiffure (Bouin)","photo":"images/equipe/Melissa Artus.webp","depuis":"Habitante depuis 11 ans","q1":"Je souhaite m'engager pleinement pour Châteauneuf : soutenir activement les associations locales, accompagner l'école dans ses projets et contribuer à maintenir une commune dynamique et bienveillante.","q2":"30 ans, coiffeuse depuis 15 ans et gérante de mon propre salon A'Melisse Coiffure à Bouin depuis 1 an.","q3":"Mon engagement repose sur l'écoute, la proximité et l'action, au service de tous les habitants de Châteauneuf."},{"id":13,"prenom":"Antoine","nom":"Egron","role":"","age":null,"profession":"","photo":"images/equipe/Antoine Egron.webp","depuis":"","q1":"","q2":"","q3":""},{"id":14,"prenom":"Cynthia","nom":"Grosseau","role":"","age":28,"profession":"Commerciale spécialisée carrelage & salle de bain","photo":"images/equipe/Cynthia Grosseau.webp","depuis":"Habitante depuis 2019","q1":"Je veux m'investir pour améliorer la sécurité, surtout pour les enfants, et favoriser un cadre de vie dynamique fondé sur l'écoute de tous.","q2":"28 ans, travaillant dans le commerce spécialisé en carrelage et aménagement de salle de bain. J'accompagne mes clients dans la réalisation de projets personnalisés.","q3":"Je rejoins cette liste pour sa convivialité et la diversité des idées. Chacun possède un savoir-faire à partager."},{"id":15,"prenom":"Thomas","nom":"Barraud","role":"","age":null,"profession":"","photo":"images/equipe/Thomas barraud.webp","depuis":"","q1":"","q2":"","q3":""},{"id":16,"prenom":"Laure","nom":"Lamour","role":"","age":38,"profession":"Assistante audioprothésiste, en reconversion comme carreleuse","photo":"images/equipe/Laure Lamour.webp","depuis":"Sur la commune depuis 2013","q1":"Grâce à mon engagement associatif dans la commune, je connais déjà quelques acteurs locaux et la municipalité. Mes métiers dans le paramédical m'ont apporté une capacité d'organisation et des connaissances en démarches administratives.","q2":"38 ans, ancienne opticienne pendant 10 ans, puis assistante audioprothésiste depuis 8 ans. Actuellement en reconversion professionnelle comme carreleuse.","q3":"Je souhaite que chaque citoyen prenne sa place et devienne acteur sur la commune. Je veux faire de Châteauneuf une commune sereine et facile à vivre, du bourg jusqu'aux petits coins les plus reculés."},{"id":17,"prenom":"Jordan","nom":"Belanger","role":"","age":null,"profession":"","photo":"images/equipe/Jordan Belanger.webp","depuis":"","q1":"","q2":"","q3":""}]};
 
     function renderTeam(data) {
       const grid = document.getElementById('team-grid');
@@ -1203,6 +1232,7 @@
         document.getElementById(f).classList.remove('error');
         document.getElementById(f + '-error').classList.add('hidden');
       });
+      document.getElementById('rgpd-consent-error').classList.add('hidden');
       document.getElementById('form-error-msg').classList.add('hidden');
 
       const prenom = document.getElementById('prenom').value.trim();
@@ -1215,6 +1245,7 @@
       if (!nom) { document.getElementById('nom').classList.add('error'); document.getElementById('nom-error').classList.remove('hidden'); valid = false; }
       if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { document.getElementById('email').classList.add('error'); document.getElementById('email-error').classList.remove('hidden'); valid = false; }
       if (!telephone) { document.getElementById('telephone').classList.add('error'); document.getElementById('telephone-error').classList.remove('hidden'); valid = false; }
+      if (!document.getElementById('rgpd-consent').checked) { document.getElementById('rgpd-consent-error').classList.remove('hidden'); valid = false; }
       if (!valid) return;
 
       const btn = document.getElementById('submit-btn');
@@ -1256,11 +1287,11 @@
 
       // Fallback inline (si l'API est indisponible)
       const FALLBACK = [
-        { name: "Laure Lamour", profession: "Assistante audioprothésiste", quote: "Je souhaite faire de Châteauneuf une commune sereine et facile à vivre, du bourg jusqu'aux petits coins les plus reculés.", photo: "images/equipe/Laure Lamour.jpg", color: "#33C1EB" },
-        { name: "Azeline Cornut", profession: "Éclairagiste de théâtre", quote: "Une commune pensée pour les enfants est une commune plus sûre, plus solidaire, plus durable et donc plus agréable pour tous.", photo: "images/equipe/Azeline Cornut.jpg", color: "#F79F87" },
-        { name: "Melissa Artus", profession: "Coiffeuse, gérante A'Melisse", quote: "Mon engagement repose sur l'écoute, la proximité et l'action, au service de tous les habitants de Châteauneuf.", photo: "images/equipe/Melissa Artus.jpg", color: "#A7BF6F" },
-        { name: "Annabelle Briand", profession: "Assistante comptable", quote: "Je souhaite apporter un nouveau dynamisme à la commune — être aux côtés des habitants pour montrer que la municipalité peut être à leur écoute.", photo: "images/equipe/Annabelle Briand.jpg", color: "#33C1EB" },
-        { name: "Aurélien Bonnin", profession: "Électricien", quote: "Je souhaite participer activement à la vie locale plutôt que rester simple observateur. Proximité, écoute, bon sens et esprit collectif.", photo: "images/equipe/Aurélien Bonnin.jpg", color: "#F79F87" }
+        { name: "Laure Lamour", profession: "Assistante audioprothésiste", quote: "Je souhaite faire de Châteauneuf une commune sereine et facile à vivre, du bourg jusqu'aux petits coins les plus reculés.", photo: "images/equipe/Laure Lamour.webp", color: "#33C1EB" },
+        { name: "Azeline Cornut", profession: "Éclairagiste de théâtre", quote: "Une commune pensée pour les enfants est une commune plus sûre, plus solidaire, plus durable et donc plus agréable pour tous.", photo: "images/equipe/Azeline Cornut.webp", color: "#F79F87" },
+        { name: "Melissa Artus", profession: "Coiffeuse, gérante A'Melisse", quote: "Mon engagement repose sur l'écoute, la proximité et l'action, au service de tous les habitants de Châteauneuf.", photo: "images/equipe/Melissa Artus.webp", color: "#A7BF6F" },
+        { name: "Annabelle Briand", profession: "Assistante comptable", quote: "Je souhaite apporter un nouveau dynamisme à la commune — être aux côtés des habitants pour montrer que la municipalité peut être à leur écoute.", photo: "images/equipe/Annabelle Briand.webp", color: "#33C1EB" },
+        { name: "Aurélien Bonnin", profession: "Électricien", quote: "Je souhaite participer activement à la vie locale plutôt que rester simple observateur. Proximité, écoute, bon sens et esprit collectif.", photo: "images/equipe/Aurélien Bonnin.webp", color: "#F79F87" }
       ];
 
       function escQuote(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
@@ -1362,6 +1393,7 @@
           document.getElementById(f).classList.remove('error');
           document.getElementById(f + '-error').classList.add('hidden');
         });
+        document.getElementById('idea-rgpd-consent-error').classList.add('hidden');
         document.getElementById('idea-error-msg').classList.add('hidden');
 
         const prenom = document.getElementById('idea-prenom').value.trim();
@@ -1378,6 +1410,7 @@
         if (!telephone) { document.getElementById('idea-telephone').classList.add('error'); document.getElementById('idea-telephone-error').classList.remove('hidden'); valid = false; }
         if (!sujet) { document.getElementById('idea-sujet').classList.add('error'); document.getElementById('idea-sujet-error').classList.remove('hidden'); valid = false; }
         if (!message) { document.getElementById('idea-message').classList.add('error'); document.getElementById('idea-message-error').classList.remove('hidden'); valid = false; }
+        if (!document.getElementById('idea-rgpd-consent').checked) { document.getElementById('idea-rgpd-consent-error').classList.remove('hidden'); valid = false; }
         if (!valid) return;
 
         const btn = document.getElementById('idea-submit-btn');
@@ -1410,6 +1443,36 @@
           btn.disabled = false;
           btnText.textContent = 'Envoyer mon idée';
         }
+      });
+    })();
+  </script>
+
+  <!-- ═══ BANDEAU COOKIE INFORMATIF ═══ -->
+  <div id="cookie-banner" class="fixed bottom-0 left-0 right-0 z-50 translate-y-full transition-transform duration-500 ease-out" style="display:none;">
+    <div class="bg-gray-900 text-white px-4 py-4 shadow-2xl border-t border-gray-700">
+      <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center gap-4">
+        <p class="text-sm text-gray-300 flex-1 text-center sm:text-left">
+          Ce site n'utilise aucun cookie publicitaire ni de suivi. Seules des ressources techniques (polices, mise en page) sont chargées depuis des serveurs tiers pour le bon fonctionnement du site.
+          <a href="politique-confidentialite.html" class="underline text-white hover:text-primary-400 ml-1">En savoir plus</a>
+        </p>
+        <button id="cookie-dismiss" class="flex-shrink-0 px-6 py-2 bg-primary-500 hover:bg-primary-600 text-white text-sm font-semibold rounded-full transition-colors">
+          Compris
+        </button>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function() {
+      if (localStorage.getItem('cookie_info_dismissed')) return;
+      var banner = document.getElementById('cookie-banner');
+      banner.style.display = '';
+      setTimeout(function() {
+        banner.classList.remove('translate-y-full');
+      }, 1500);
+      document.getElementById('cookie-dismiss').addEventListener('click', function() {
+        banner.classList.add('translate-y-full');
+        localStorage.setItem('cookie_info_dismissed', '1');
+        setTimeout(function() { banner.style.display = 'none'; }, 500);
       });
     })();
   </script>

@@ -57,6 +57,19 @@
       </div>
     </header>
 
+    <!-- Bandeau alerte session -->
+    <div id="session-warning" class="hidden bg-amber-50 border-b border-amber-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-3">
+        <p class="text-sm text-amber-800">
+          <span class="font-semibold">Votre session expire bientôt.</span>
+          Temps restant : <span id="session-countdown" class="font-mono font-bold">--:--</span>
+        </p>
+        <button onclick="handleReauth()" class="flex-shrink-0 px-4 py-1.5 bg-amber-600 text-white text-xs font-bold rounded-lg hover:bg-amber-700 transition-colors">
+          Prolonger la session
+        </button>
+      </div>
+    </div>
+
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
       <!-- Stats -->
@@ -282,6 +295,27 @@
     </div>
   </div>
 
+  <!-- ═══ MODAL: Reconnexion session expirée ═══ -->
+  <div id="reauth-modal" class="fixed inset-0 bg-black/50 z-[60] hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm">
+      <div class="p-6 text-center">
+        <div class="w-14 h-14 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-7 h-7 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m0 0v2m0-2h2m-2 0H10m-4-6V8a6 6 0 1112 0v1"/></svg>
+        </div>
+        <h3 class="text-lg font-bold text-gray-800 mb-1">Session expirée</h3>
+        <p class="text-sm text-gray-500 mb-5">Reconnectez-vous pour continuer sans perdre votre travail.</p>
+        <div id="reauth-error" class="bg-red-50 border border-red-200 text-red-700 rounded-xl p-3 text-sm mb-4 hidden"></div>
+        <form id="reauth-form" onsubmit="submitReauth(event)">
+          <input type="password" id="reauth-password" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-colors mb-4" placeholder="Mot de passe" required>
+          <button type="submit" id="reauth-btn" class="w-full py-3 px-6 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-200">
+            Se reconnecter
+          </button>
+        </form>
+        <button onclick="logout()" class="mt-3 text-xs text-gray-400 hover:text-red-500 transition-colors">Se déconnecter</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // ═══════════════════════════════════════════════════════════════════════════
     // STATE
@@ -344,16 +378,154 @@
       loadContacts();
       loadIdeas();
       loadTeam();
+      startSessionMonitor();
     }
 
     function logout() {
+      stopSessionMonitor();
       authToken = '';
       tokenExpiry = 0;
       localStorage.removeItem('admin_token');
       localStorage.removeItem('admin_token_expiry');
       document.getElementById('admin-screen').classList.add('hidden');
       document.getElementById('login-screen').classList.remove('hidden');
+      document.getElementById('session-warning').classList.add('hidden');
+      document.getElementById('reauth-modal').classList.add('hidden');
       document.getElementById('password').value = '';
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // SESSION MONITOR
+    // ═══════════════════════════════════════════════════════════════════════════
+    let sessionInterval = null;
+    let countdownInterval = null;
+    const SESSION_WARNING_THRESHOLD = 5 * 60; // 5 minutes avant expiration
+
+    function startSessionMonitor() {
+      stopSessionMonitor();
+      sessionInterval = setInterval(checkSession, 30000); // Vérifier toutes les 30s
+    }
+
+    function stopSessionMonitor() {
+      if (sessionInterval) { clearInterval(sessionInterval); sessionInterval = null; }
+      if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+    }
+
+    function checkSession() {
+      const now = Math.floor(Date.now() / 1000);
+      const remaining = tokenExpiry - now;
+
+      if (remaining <= 0) {
+        // Session expirée → modal reconnexion
+        stopSessionMonitor();
+        showReauthModal();
+      } else if (remaining <= SESSION_WARNING_THRESHOLD) {
+        // Moins de 5 minutes → afficher warning
+        showSessionWarning(remaining);
+      } else {
+        document.getElementById('session-warning').classList.add('hidden');
+        if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+      }
+    }
+
+    function showSessionWarning(remaining) {
+      const warning = document.getElementById('session-warning');
+      warning.classList.remove('hidden');
+      updateCountdown(remaining);
+
+      if (!countdownInterval) {
+        countdownInterval = setInterval(function() {
+          const now = Math.floor(Date.now() / 1000);
+          const rem = tokenExpiry - now;
+          if (rem <= 0) {
+            clearInterval(countdownInterval); countdownInterval = null;
+            stopSessionMonitor();
+            showReauthModal();
+          } else {
+            updateCountdown(rem);
+          }
+        }, 1000);
+      }
+    }
+
+    function updateCountdown(seconds) {
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      document.getElementById('session-countdown').textContent =
+        String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+    }
+
+    function showReauthModal() {
+      document.getElementById('session-warning').classList.add('hidden');
+      if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+      document.getElementById('reauth-modal').classList.remove('hidden');
+      document.getElementById('reauth-password').value = '';
+      document.getElementById('reauth-error').classList.add('hidden');
+      document.getElementById('reauth-password').focus();
+    }
+
+    async function handleReauth() {
+      // Tentative silencieuse de prolongation (bouton "Prolonger")
+      const password = prompt('Entrez votre mot de passe pour prolonger la session :');
+      if (!password) return;
+
+      try {
+        const resp = await fetch('/api/admin-login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password }),
+        });
+        const data = await resp.json();
+        if (data.success) {
+          authToken = data.token;
+          tokenExpiry = Math.floor(Date.now() / 1000) + data.expiresIn;
+          localStorage.setItem('admin_token', authToken);
+          localStorage.setItem('admin_token_expiry', String(tokenExpiry));
+          document.getElementById('session-warning').classList.add('hidden');
+          if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+        } else {
+          alert(data.message || 'Mot de passe incorrect.');
+        }
+      } catch {
+        alert('Erreur de connexion au serveur.');
+      }
+    }
+
+    async function submitReauth(event) {
+      event.preventDefault();
+      const password = document.getElementById('reauth-password').value;
+      const btn = document.getElementById('reauth-btn');
+      const errDiv = document.getElementById('reauth-error');
+      errDiv.classList.add('hidden');
+      btn.disabled = true;
+      btn.textContent = 'Connexion…';
+
+      try {
+        const resp = await fetch('/api/admin-login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password }),
+        });
+        const data = await resp.json();
+
+        if (data.success) {
+          authToken = data.token;
+          tokenExpiry = Math.floor(Date.now() / 1000) + data.expiresIn;
+          localStorage.setItem('admin_token', authToken);
+          localStorage.setItem('admin_token_expiry', String(tokenExpiry));
+          document.getElementById('reauth-modal').classList.add('hidden');
+          startSessionMonitor();
+        } else {
+          errDiv.textContent = data.message || 'Mot de passe incorrect.';
+          errDiv.classList.remove('hidden');
+        }
+      } catch {
+        errDiv.textContent = 'Erreur de connexion au serveur.';
+        errDiv.classList.remove('hidden');
+      }
+
+      btn.disabled = false;
+      btn.textContent = 'Se reconnecter';
     }
 
     function showTab(tab) {
@@ -383,7 +555,7 @@
           headers: { 'Authorization': 'Bearer ' + authToken },
         });
 
-        if (resp.status === 401) { logout(); return; }
+        if (resp.status === 401) { showReauthModal(); return; }
         const data = await resp.json();
 
         loading.classList.add('hidden');
@@ -424,7 +596,7 @@
         const resp = await fetch('/api/admin-ideas', {
           headers: { 'Authorization': 'Bearer ' + authToken },
         });
-        if (resp.status === 401) { logout(); return; }
+        if (resp.status === 401) { showReauthModal(); return; }
         const data = await resp.json();
 
         document.getElementById('ideas-loading').classList.add('hidden');
@@ -552,6 +724,10 @@
     function resolvePhotoUrl(photo) {
       if (!photo) return '';
       if (photo.startsWith('http://') || photo.startsWith('https://')) return photo;
+      // Utiliser les versions WebP (plus légères) si disponibles
+      if (photo.endsWith('.jpg') || photo.endsWith('.jpeg')) {
+        return '../' + photo.replace(/\.jpe?g$/i, '.webp');
+      }
       return '../' + photo;
     }
 
@@ -560,7 +736,7 @@
         const resp = await fetch('/api/admin-team', {
           headers: { 'Authorization': 'Bearer ' + authToken },
         });
-        if (resp.status === 401) { logout(); return; }
+        if (resp.status === 401) { showReauthModal(); return; }
         const data = await resp.json();
 
         allTeamMembers = data.members || [];
@@ -771,7 +947,7 @@
             headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
             body: JSON.stringify(memberData),
           });
-          if (resp.status === 401) { logout(); return; }
+          if (resp.status === 401) { showReauthModal(); return; }
           const data = await resp.json();
           if (!data.success) throw new Error(data.message || 'Erreur de création.');
           memberId = data.member.id;
@@ -782,7 +958,7 @@
             headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
             body: JSON.stringify(memberData),
           });
-          if (resp.status === 401) { logout(); return; }
+          if (resp.status === 401) { showReauthModal(); return; }
           const data = await resp.json();
           if (!data.success) throw new Error(data.message || 'Erreur de mise à jour.');
         }
@@ -826,7 +1002,7 @@
           headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
           body: JSON.stringify({ id, is_active: newStatus }),
         });
-        if (resp.status === 401) { logout(); return; }
+        if (resp.status === 401) { showReauthModal(); return; }
         await loadTeam();
       } catch {
         alert('Erreur lors de la mise à jour.');
@@ -853,7 +1029,7 @@
           headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
           body: JSON.stringify({ reorder }),
         });
-        if (resp.status === 401) { logout(); return; }
+        if (resp.status === 401) { showReauthModal(); return; }
         await loadTeam();
       } catch {
         alert('Erreur lors du réordonnancement.');
