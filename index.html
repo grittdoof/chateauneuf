@@ -1039,31 +1039,45 @@
   <script>
     lucide.createIcons();
 
+    // Throttle helper — limite à 1 appel tous les N ms (économie CPU mobile)
+    function throttle(fn, delay) {
+      var last = 0, timer = null;
+      return function() {
+        var now = Date.now();
+        if (now - last >= delay) {
+          last = now;
+          fn();
+        } else if (!timer) {
+          timer = setTimeout(function() { timer = null; last = Date.now(); fn(); }, delay - (now - last));
+        }
+      };
+    }
+
     // Navbar scroll
-    const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
+    var navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', throttle(function() {
       if (window.scrollY > 50) {
         navbar.classList.add('bg-white/95', 'backdrop-blur-lg', 'shadow-lg');
       } else {
         navbar.classList.remove('bg-white/95', 'backdrop-blur-lg', 'shadow-lg');
       }
-    });
+    }, 100), { passive: true });
 
     // Mobile menu
-    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-    const closeMenuBtn = document.getElementById('close-menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
-    mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.add('open'));
-    closeMenuBtn.addEventListener('click', () => mobileMenu.classList.remove('open'));
-    mobileMenu.querySelectorAll('a').forEach(link => link.addEventListener('click', () => mobileMenu.classList.remove('open')));
+    var mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    var closeMenuBtn = document.getElementById('close-menu-btn');
+    var mobileMenu = document.getElementById('mobile-menu');
+    if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', function() { mobileMenu.classList.add('open'); });
+    if (closeMenuBtn) closeMenuBtn.addEventListener('click', function() { mobileMenu.classList.remove('open'); });
+    if (mobileMenu) mobileMenu.querySelectorAll('a').forEach(function(link) { link.addEventListener('click', function() { mobileMenu.classList.remove('open'); }); });
 
-    // Scroll reveal — requery à chaque appel pour inclure les éléments générés dynamiquement
-    const revealOnScroll = () => {
-      document.querySelectorAll('.reveal').forEach(el => {
+    // Scroll reveal — throttlé pour économiser le CPU mobile
+    var revealOnScroll = function() {
+      document.querySelectorAll('.reveal:not(.active)').forEach(function(el) {
         if (el.getBoundingClientRect().top < window.innerHeight - 100) el.classList.add('active');
       });
     };
-    window.addEventListener('scroll', revealOnScroll);
+    window.addEventListener('scroll', throttle(revealOnScroll, 150), { passive: true });
     window.addEventListener('load', revealOnScroll);
 
     // Smooth scroll
@@ -1082,8 +1096,20 @@
       { gradBg: 'from-accent-400 to-accent-500',     textColor: '#56721C' },
     ];
 
+    // Stockage des données équipe pour création lazy des modals
+    var teamDataCache = [];
+
     function openModal(id) {
-      const modal = document.getElementById('modal-' + id);
+      var modal = document.getElementById('modal-' + id);
+      // Créer la modal à la demande si elle n'existe pas encore (lazy-loading)
+      if (!modal) {
+        var member = teamDataCache.find(function(m) { return m.id === id; });
+        if (member) {
+          var container = document.getElementById('modals-container');
+          container.insertAdjacentHTML('beforeend', buildModal(member));
+          modal = document.getElementById('modal-' + id);
+        }
+      }
       if (modal) {
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
@@ -1091,7 +1117,7 @@
     }
 
     function closeModal(id) {
-      const modal = document.getElementById('modal-' + id);
+      var modal = document.getElementById('modal-' + id);
       if (modal) {
         modal.classList.remove('active');
         document.body.style.overflow = '';
@@ -1204,10 +1230,13 @@
     const TEAM_FALLBACK = {"members":[{"id":1,"prenom":"Aurélien","nom":"Arnaud","role":"Tête de liste","age":36,"profession":"Directeur conseil en agence de communication","photo":"images/equipe/Aurélien Arnaud.webp","depuis":"Castelneuvien de toujours","q1":"Je souhaite apporter mon expertise en communication et mon engagement sincère pour porter les projets des habitants avec clarté, transparence et ambition.","q2":"36 ans, directeur conseil en agence de communication. Je travaille au quotidien à valoriser des projets et créer du lien entre les acteurs d'un territoire. Natif de Châteauneuf, je connais chaque association et chaque réalité de cette commune.","q3":"Parce que Châteauneuf mérite une équipe transparente, à l'écoute et tournée vers l'avenir. Je suis fier de porter cette liste citoyenne avec conviction."},{"id":2,"prenom":"Fanellie","nom":"Egron","role":"","age":null,"profession":"Infirmière","photo":"images/equipe/Fanellie Egron.webp","depuis":"","q1":"","q2":"","q3":""},{"id":3,"prenom":"Jordan","nom":"Lahoreau","role":"","age":null,"profession":"","photo":"images/equipe/Jordan Lahoreau.webp","depuis":"","q1":"","q2":"","q3":""},{"id":4,"prenom":"Clémence","nom":"Bessau","role":"","age":25,"profession":"Conseillère bancaire","photo":"images/equipe/Clémence Bessau.webp","depuis":"Habitante depuis 2023","q1":"Je souhaite apporter mon dynamisme, ma rigueur et mon sens de l'écoute afin de soutenir et contribuer à des projets concrets pour les habitants.","q2":"25 ans, conseillère bancaire et ancienne agent immobilier. J'accompagne au quotidien des familles dans leurs projets, avec sérieux et proximité.","q3":"En tant que jeune maman, j'aspire à défendre une commune dynamique, attentive aux familles et tournée vers l'avenir."},{"id":5,"prenom":"Aurélien","nom":"Bonnin","role":"","age":41,"profession":"Électricien dans le bâtiment","photo":"images/equipe/Aurélien Bonnin.webp","depuis":"Natif de la commune, Castelneuvien depuis 41 ans","q1":"Je souhaite m'investir concrètement. J'ai toujours aimé m'impliquer dans ce que je fais et je veux aujourd'hui mettre cette énergie au service de ma commune.","q2":"41 ans. Après 15 ans comme technicien audiovisuel dans l'événementiel, j'ai choisi de me reconvertir et je suis maintenant électricien dans le bâtiment.","q3":"Parce que je souhaite participer activement à la vie locale plutôt que rester simple observateur. Cette liste correspond à mes valeurs : proximité, écoute, bon sens et esprit collectif."},{"id":6,"prenom":"Azeline","nom":"Cornut","role":"","age":36,"profession":"Éclairagiste de théâtre","photo":"images/equipe/Azeline Cornut.webp","depuis":"Installée à Châteauneuf depuis 3 ans","q1":"Je souhaite apporter une énergie nouvelle et constructive à la commune, en pensant le territoire à hauteur d'enfant — parce qu'une commune pensée pour les enfants est une commune plus sûre, plus solidaire, plus durable et donc plus agréable pour tous.","q2":"36 ans, éclairagiste dans le théâtre. Ce métier de l'ombre qui met en lumière me passionne. Savant mélange entre technique et artistique, il requiert un sens du rythme, de la créativité, de l'adaptabilité et un goût pour le travail en équipe.","q3":"J'ai toujours eu foi en la force du collectif. Cette liste citoyenne à Châteauneuf, c'est l'opportunité d'œuvrer pour l'intérêt général, avec une approche fondée sur l'écoute et la participation citoyenne."},{"id":7,"prenom":"Yannick","nom":"Oiry","role":"","age":57,"profession":"Agent administratif exploitation (Voyages Nombalais)","photo":"images/equipe/Yannick Oiry.webp","depuis":"","q1":"Respect du budget, transparence et ne pas augmenter la dette par habitant. Participer à la protection de l'environnement. Développer les activités pour l'ensemble des habitants. Préserver l'école. Développer le nombre d'entreprises dans la zone artisanale.","q2":"57 ans, agent administratif exploitation aux Voyages Nombalais : gestion des heures et primes conducteurs (150 agents), suivi de la consommation carburant, mise en place des formations obligatoires, suivi des infractions, membre du CSE et référent harcèlement.","q3":"Je m'engage sur cette liste citoyenne pour être au service des habitants de la commune et améliorer leur quotidien."},{"id":8,"prenom":"Annabelle","nom":"Briand","role":"","age":34,"profession":"Assistante comptable (secteur électricité & photovoltaïque)","photo":"images/equipe/Annabelle Briand.webp","depuis":"Habitante de toujours","q1":"Je souhaite apporter un nouveau dynamisme à la commune, être aux côtés des habitants pour leur montrer que la municipalité peut être à leur écoute. 7 ans à l'OGEC de l'école dont 2 ans de présidence.","q2":"34 ans, assistante comptable dans une entreprise privée dans le domaine de l'électricité et du photovoltaïque.","q3":"Je m'engage pour apporter plus de soutien aux associations et à l'école. Je n'oublie pas nos aînés, auxquels j'aimerais tisser un lien avec les plus jeunes, avec des infrastructures et activités adaptées. La parole des Castelneuviens a été oubliée et je souhaite que cela change."},{"id":9,"prenom":"Serge","nom":"Cousin","role":"","age":69,"profession":"Architecte DPLG (retraité)","photo":"images/equipe/Serge Cousin.webp","depuis":"Demeure à Châteauneuf depuis janvier 2021","q1":"Un peu de mon temps pour aider l'équipe et donc la communauté, en fonction des connaissances liées à mon vécu et à mes disponibilités.","q2":"69 ans. Bac F4 (Bâtiment/Génie civil) en 1974, BTS ATEB en 1976, Architecte DPLG en 1982. Parcours riche : dessinateur en bureau d'études béton armé, architecte salarié, directeur d'un négoce matériaux, architecte libéral, puis surveillant de travaux chez des bailleurs sociaux et en cabinet d'architecture.","q3":"Je m'engage pour apporter mon expérience au service de la commune et de ses habitants."},{"id":10,"prenom":"Vicky","nom":"Gervais","role":"","age":null,"profession":"","photo":"images/equipe/Vicky Gervais.webp","depuis":"","q1":"","q2":"","q3":""},{"id":11,"prenom":"Olivier","nom":"Roux","role":"","age":null,"profession":"","photo":"images/equipe/Olivier Roux.webp","depuis":"","q1":"","q2":"","q3":""},{"id":12,"prenom":"Melissa","nom":"Artus","role":"","age":30,"profession":"Coiffeuse, gérante du salon A'Melisse Coiffure (Bouin)","photo":"images/equipe/Melissa Artus.webp","depuis":"Habitante depuis 11 ans","q1":"Je souhaite m'engager pleinement pour Châteauneuf : soutenir activement les associations locales, accompagner l'école dans ses projets et contribuer à maintenir une commune dynamique et bienveillante.","q2":"30 ans, coiffeuse depuis 15 ans et gérante de mon propre salon A'Melisse Coiffure à Bouin depuis 1 an.","q3":"Mon engagement repose sur l'écoute, la proximité et l'action, au service de tous les habitants de Châteauneuf."},{"id":13,"prenom":"Antoine","nom":"Egron","role":"","age":null,"profession":"","photo":"images/equipe/Antoine Egron.webp","depuis":"","q1":"","q2":"","q3":""},{"id":14,"prenom":"Cynthia","nom":"Grosseau","role":"","age":28,"profession":"Commerciale spécialisée carrelage & salle de bain","photo":"images/equipe/Cynthia Grosseau.webp","depuis":"Habitante depuis 2019","q1":"Je veux m'investir pour améliorer la sécurité, surtout pour les enfants, et favoriser un cadre de vie dynamique fondé sur l'écoute de tous.","q2":"28 ans, travaillant dans le commerce spécialisé en carrelage et aménagement de salle de bain. J'accompagne mes clients dans la réalisation de projets personnalisés.","q3":"Je rejoins cette liste pour sa convivialité et la diversité des idées. Chacun possède un savoir-faire à partager."},{"id":15,"prenom":"Thomas","nom":"Barraud","role":"","age":null,"profession":"","photo":"images/equipe/Thomas barraud.webp","depuis":"","q1":"","q2":"","q3":""},{"id":16,"prenom":"Laure","nom":"Lamour","role":"","age":38,"profession":"Assistante audioprothésiste, en reconversion comme carreleuse","photo":"images/equipe/Laure Lamour.webp","depuis":"Sur la commune depuis 2013","q1":"Grâce à mon engagement associatif dans la commune, je connais déjà quelques acteurs locaux et la municipalité. Mes métiers dans le paramédical m'ont apporté une capacité d'organisation et des connaissances en démarches administratives.","q2":"38 ans, ancienne opticienne pendant 10 ans, puis assistante audioprothésiste depuis 8 ans. Actuellement en reconversion professionnelle comme carreleuse.","q3":"Je souhaite que chaque citoyen prenne sa place et devienne acteur sur la commune. Je veux faire de Châteauneuf une commune sereine et facile à vivre, du bourg jusqu'aux petits coins les plus reculés."},{"id":17,"prenom":"Jordan","nom":"Belanger","role":"","age":null,"profession":"","photo":"images/equipe/Jordan Belanger.webp","depuis":"","q1":"","q2":"","q3":""}]};
 
     function renderTeam(data) {
-      const grid = document.getElementById('team-grid');
-      const modalsContainer = document.getElementById('modals-container');
-      grid.innerHTML = data.members.map((m, i) => buildTeamCard(m, i)).join('');
-      modalsContainer.innerHTML = data.members.map(m => buildModal(m)).join('');
+      var grid = document.getElementById('team-grid');
+      var modalsContainer = document.getElementById('modals-container');
+      // Stocker les données pour la création lazy des modals (au clic)
+      teamDataCache = data.members;
+      grid.innerHTML = data.members.map(function(m, i) { return buildTeamCard(m, i); }).join('');
+      // Les modals sont créées à la demande dans openModal() — économie mémoire mobile
+      modalsContainer.innerHTML = '';
       lucide.createIcons();
       revealOnScroll();
     }
@@ -1326,30 +1355,34 @@
       let pos = 0;
       const speed = 0.5;
       let paused = false;
+      let carouselVisible = false;
+      let rafId = null;
       const cardWidth = 380 + 24;
 
-      track.addEventListener('mouseenter', () => { paused = true; });
-      track.addEventListener('mouseleave', () => { paused = false; });
-      track.addEventListener('touchstart', () => { paused = true; }, { passive: true });
-      track.addEventListener('touchend', () => { paused = false; });
+      track.addEventListener('mouseenter', function() { paused = true; });
+      track.addEventListener('mouseleave', function() { paused = false; });
+      track.addEventListener('touchstart', function() { paused = true; }, { passive: true });
+      track.addEventListener('touchend', function() { paused = false; });
 
-      const prevBtn = document.getElementById('carousel-prev');
-      const nextBtn = document.getElementById('carousel-next');
+      var prevBtn = document.getElementById('carousel-prev');
+      var nextBtn = document.getElementById('carousel-next');
 
       function smoothJump(targetPos) {
-        const startPos = pos;
-        const diff = targetPos - startPos;
-        const duration = 400;
-        const startTime = performance.now();
+        var startPos = pos;
+        var diff = targetPos - startPos;
+        var duration = 400;
+        var startTime = performance.now();
         paused = true;
         function animate(now) {
-          const elapsed = now - startTime;
-          const t = Math.min(elapsed / duration, 1);
-          const ease = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+          var elapsed = now - startTime;
+          var t = Math.min(elapsed / duration, 1);
+          var ease = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
           pos = startPos + diff * ease;
-          const halfWidth = track.scrollWidth / 2;
-          if (pos < 0) pos += halfWidth;
-          if (pos >= halfWidth) pos -= halfWidth;
+          var halfWidth = track.scrollWidth / 2;
+          if (halfWidth > 0) {
+            if (pos < 0) pos += halfWidth;
+            if (pos >= halfWidth) pos -= halfWidth;
+          }
           track.style.transform = 'translateX(' + (-pos) + 'px)';
           if (t < 1) requestAnimationFrame(animate);
           else paused = false;
@@ -1357,19 +1390,45 @@
         requestAnimationFrame(animate);
       }
 
-      if (prevBtn) prevBtn.addEventListener('click', () => { smoothJump(pos - cardWidth); });
-      if (nextBtn) nextBtn.addEventListener('click', () => { smoothJump(pos + cardWidth); });
+      if (prevBtn) prevBtn.addEventListener('click', function() { smoothJump(pos - cardWidth); });
+      if (nextBtn) nextBtn.addEventListener('click', function() { smoothJump(pos + cardWidth); });
 
       function step() {
-        if (!paused) {
+        if (!paused && carouselVisible && !document.hidden) {
           pos += speed;
-          const halfWidth = track.scrollWidth / 2;
-          if (pos >= halfWidth) pos = 0;
+          var halfWidth = track.scrollWidth / 2;
+          if (halfWidth > 0 && pos >= halfWidth) pos = 0;
           track.style.transform = 'translateX(' + (-pos) + 'px)';
         }
-        requestAnimationFrame(step);
+        if (carouselVisible) {
+          rafId = requestAnimationFrame(step);
+        } else {
+          rafId = null;
+        }
       }
-      requestAnimationFrame(step);
+
+      // N'animer que quand le carousel est visible à l'écran (économie CPU mobile)
+      var carouselSection = track.closest('section') || track.parentElement;
+      if ('IntersectionObserver' in window) {
+        var observer = new IntersectionObserver(function(entries) {
+          carouselVisible = entries[0].isIntersecting;
+          if (carouselVisible && !rafId) {
+            rafId = requestAnimationFrame(step);
+          }
+        }, { threshold: 0.1 });
+        observer.observe(carouselSection);
+      } else {
+        // Fallback pour très vieux navigateurs
+        carouselVisible = true;
+        rafId = requestAnimationFrame(step);
+      }
+
+      // Pause quand l'onglet est caché
+      document.addEventListener('visibilitychange', function() {
+        if (!document.hidden && carouselVisible && !rafId) {
+          rafId = requestAnimationFrame(step);
+        }
+      });
     })();
 
     // ============ IDÉE FORM ============
